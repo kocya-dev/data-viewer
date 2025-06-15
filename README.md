@@ -132,22 +132,24 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 ### Phase 5: 仕様追加実装 ✅ 完了 (2025-06-15)
 
 - [x] レイアウト・表示仕様の追加実装
-- [x] 中央配置・1280px 固定幅実装
+- [x] 中央配置・1024px 固定幅実装
 
 **Phase 5 完了確認項目:**
 
 - ✅ **App.css 修正**: アプリケーションの中央配置実装
-- ✅ **1280px 固定幅設定**: タブ内容による表示幅変動の防止
-- ✅ **CSS max-width 活用**: max-width: 1280px による固定幅中央配置
+- ✅ **1024px 固定幅設定**: タブ内容による表示幅変動の防止
+- ✅ **CSS max-width 活用**: max-width: 1024px による固定幅中央配置
 - ✅ **レスポンシブ対応強化**: margin: 0 auto による水平中央配置
+- ✅ **横スクロール対応**: 最小幅(1024px)確保による小画面での横スクロール対応
 - ✅ **統一レイアウト**: アプリケーション全体への適用
-- ✅ Pull Request #6: [feat: center layout with 1280px fixed width](https://github.com/kocya-dev/data-viewer/pull/6)
+- ✅ Pull Request #6: [feat: center layout with 1024px fixed width](https://github.com/kocya-dev/data-viewer/pull/6)
 
 **実装詳細 (webapp-spec.md 4.3 節に基づく):**
 
 - **中央配置**: `margin: 0 auto` による水平中央配置
-- **固定幅**: `max-width: 1280px` でアプリケーション幅を 1280pixel に固定
-- **CSS 統合**: App.css での直接的なスタイル指定
+- **固定幅**: `max-width: 1024px` でアプリケーション幅を 1024pixel に固定
+- **最小幅**: `minWidth: '1024px'` による小画面での横スクロール対応
+- **CSS 統合**: Layout.tsx での Material-UI sx props によるスタイル指定
 - **レスポンシブパディング**: `padding: 2rem` で適切な余白設定
 - **効果**: タブ内文字列長によるレイアウト変動の防止、見やすい中央配置レイアウトの実現
 
@@ -552,5 +554,5 @@ npm run dev
 - 2025-06-15: Phase 3 完了 - 可視化（Recharts 実装、レスポンシブ対応、アクセシビリティ対応、17 件のテスト追加）
 - 2025-06-15: Phase 3 カスタムツールチップ強化 完了（使用量データ表示、コスト算出根拠明示、無料枠比較表示、PR #4 作成）
 - 2025-06-15: Phase 4 完了 - 最適化・テスト・品質管理（パフォーマンス最適化、エラーハンドリング強化、コード品質改善、PR #5 作成）
-- 2025-06-15: Phase 5 完了 - 仕様追加実装（レイアウト中央配置・1280px 固定幅実装、PR #6 作成）
+- 2025-06-15: Phase 5 完了 - 仕様追加実装（レイアウト中央配置・1024px 固定幅実装、PR #6 作成）
 - 2025-06-15: **プロジェクト完了** - GitHub Organization 課金可視化アプリ開発完了
