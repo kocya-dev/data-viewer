@@ -176,7 +176,7 @@ export class CsvService {
               availableFiles.push(dateMatch[1]);
             }
           }
-        } catch (error) {
+        } catch {
           // ファイルが存在しない場合はスキップ
         }
       }
