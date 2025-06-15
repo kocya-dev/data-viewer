@@ -116,12 +116,12 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 
 - ✅ **コード品質改善**: ESLint エラー 13 件 → 0 件 (all fixed)
 - ✅ **TypeScript 型安全性強化**: CategoryConfig 型導入、any 型削除
-- ✅ **パフォーマンス最適化 - Code Splitting**: 
+- ✅ **パフォーマンス最適化 - Code Splitting**:
   - Lazy Loading 実装 (Dashboard コンポーネント)
   - Manual Chunks 設定 (MUI: 485KB, Charts: 379KB, Date-utils: 47KB)
   - バンドルサイズ最適化: 1,128KB → 最大 485KB per chunk
 - ✅ **メモ化最適化**: 計算量の多いデータ集計処理をメモ化 (useMemo)
-- ✅ **エラーハンドリング強化**: 
+- ✅ **エラーハンドリング強化**:
   - 詳細なエラーレポート機能 (展開可能なエラー詳細)
   - 開発環境でのエラーログ出力
   - 再試行・ページ再読み込みアクション
@@ -132,37 +132,37 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 ### Phase 5: 仕様追加実装 ✅ 完了 (2025-06-15)
 
 - [x] レイアウト・表示仕様の追加実装
-- [x] 中央配置・1024px固定幅実装
+- [x] 中央配置・1280px 固定幅実装
 
 **Phase 5 完了確認項目:**
 
-- ✅ **Layout コンポーネント修正**: アプリケーションの中央配置実装
-- ✅ **1024px固定幅設定**: タブ内容による表示幅変動の防止
-- ✅ **Material-UI Container活用**: maxWidth カスタム設定による中央配置
-- ✅ **レスポンシブ対応強化**: 小画面での適切なパディング設定
-- ✅ **統一レイアウト**: メインコンテンツ・フッター両方に適用
-- ✅ Pull Request #6: [feat: center layout with 1024px fixed width](https://github.com/kocya-dev/data-viewer/pull/6)
+- ✅ **App.css 修正**: アプリケーションの中央配置実装
+- ✅ **1280px 固定幅設定**: タブ内容による表示幅変動の防止
+- ✅ **CSS max-width 活用**: max-width: 1280px による固定幅中央配置
+- ✅ **レスポンシブ対応強化**: margin: 0 auto による水平中央配置
+- ✅ **統一レイアウト**: アプリケーション全体への適用
+- ✅ Pull Request #6: [feat: center layout with 1280px fixed width](https://github.com/kocya-dev/data-viewer/pull/6)
 
-**実装詳細 (webapp-spec.md 4.3節に基づく):**
+**実装詳細 (webapp-spec.md 4.3 節に基づく):**
 
-- **中央配置**: `margin: '0 auto'` による水平中央配置
-- **固定幅**: `maxWidth: '1024px'` でアプリケーション幅を1024pixelに固定
-- **Material-UI統合**: `maxWidth={false}` でプリセット無効化、カスタムsxプロパティ使用
-- **レスポンシブパディング**: `px: { xs: 2, sm: 3 }` で画面サイズに応じた調整
+- **中央配置**: `margin: 0 auto` による水平中央配置
+- **固定幅**: `max-width: 1280px` でアプリケーション幅を 1280pixel に固定
+- **CSS 統合**: App.css での直接的なスタイル指定
+- **レスポンシブパディング**: `padding: 2rem` で適切な余白設定
 - **効果**: タブ内文字列長によるレイアウト変動の防止、見やすい中央配置レイアウトの実現
 
 ### Phase 6: プロジェクト完了 ✅ 完了 (2025-06-15)
 
 **🎯 GitHub Organization 課金可視化アプリ開発完了**
 
-本プロジェクトは、GitHub Organization の課金データ（Actions、Codespaces、Storage）を効率的に可視化するWebアプリケーションとして、すべての目標機能を実装完了しました。
+本プロジェクトは、GitHub Organization の課金データ（Actions、Codespaces、Storage）を効率的に可視化する Web アプリケーションとして、すべての目標機能を実装完了しました。
 
 **📊 最終実装機能:**
 
 1. **マルチカテゴリ対応**: Actions/Codespaces/Storage の統合可視化
 2. **多角的分析**: 全体概要・ユーザー詳細・リポジトリ詳細の 3 表示モード
 3. **高度なデータ処理**: 複数期間データ集計・無料枠使用率計算・傾向分析
-4. **高品質UI/UX**: Material-UI ベース、レスポンシブ、アクセシビリティ対応、中央配置・1024px固定幅レイアウト
+4. **高品質 UI/UX**: Material-UI ベース、レスポンシブ、アクセシビリティ対応、中央配置・1024px 固定幅レイアウト
 5. **パフォーマンス最適化**: Code Splitting、メモ化、バンドルサイズ最適化
 6. **堅牢性**: 包括的エラーハンドリング、型安全性、テストカバレッジ
 
@@ -174,12 +174,12 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 - **テスト**: Vitest + React Testing Library (65 tests)
 - **品質管理**: ESLint + TypeScript strict mode + pre-commit hooks
 - **最適化**: Lazy Loading + Manual Chunks (最大チャンク 485KB)
-- **レイアウト**: 中央配置・1024px固定幅、レスポンシブ対応
+- **レイアウト**: 中央配置・1024px 固定幅、レスポンシブ対応
 
 **📈 運用準備完了:**
 
 - ✅ プロダクションビルド動作確認
-- ✅ 全機能テスト完了 
+- ✅ 全機能テスト完了
 - ✅ パフォーマンス最適化完了
 - ✅ コード品質チェック完了
 - ✅ レイアウト仕様実装完了
@@ -552,5 +552,5 @@ npm run dev
 - 2025-06-15: Phase 3 完了 - 可視化（Recharts 実装、レスポンシブ対応、アクセシビリティ対応、17 件のテスト追加）
 - 2025-06-15: Phase 3 カスタムツールチップ強化 完了（使用量データ表示、コスト算出根拠明示、無料枠比較表示、PR #4 作成）
 - 2025-06-15: Phase 4 完了 - 最適化・テスト・品質管理（パフォーマンス最適化、エラーハンドリング強化、コード品質改善、PR #5 作成）
-- 2025-06-15: Phase 5 完了 - 仕様追加実装（レイアウト中央配置・1024px固定幅実装、PR #6 作成）
+- 2025-06-15: Phase 5 完了 - 仕様追加実装（レイアウト中央配置・1280px 固定幅実装、PR #6 作成）
 - 2025-06-15: **プロジェクト完了** - GitHub Organization 課金可視化アプリ開発完了
