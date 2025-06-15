@@ -72,11 +72,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
           </Alert>
 
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              variant="contained"
-              startIcon={<RefreshIcon />}
-              onClick={this.handleReload}
-            >
+            <Button variant="contained" startIcon={<RefreshIcon />} onClick={this.handleReload}>
               ページを再読み込み
             </Button>
             <Button variant="outlined" onClick={this.handleRetry}>
@@ -98,11 +94,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               <Typography variant="subtitle2" gutterBottom>
                 開発環境のエラー詳細:
               </Typography>
-              <Typography
-                variant="body2"
-                component="pre"
-                sx={{ fontSize: '0.75rem', whiteSpace: 'pre-wrap' }}
-              >
+              <Typography variant="body2" component="pre" sx={{ fontSize: '0.75rem', whiteSpace: 'pre-wrap' }}>
                 {this.state.error.stack}
               </Typography>
             </Box>

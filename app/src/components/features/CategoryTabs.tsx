@@ -7,10 +7,7 @@ interface CategoryTabsProps {
   onCategoryChange: (category: Category) => void;
 }
 
-function CategoryTabs({
-  selectedCategory,
-  onCategoryChange,
-}: CategoryTabsProps) {
+function CategoryTabs({ selectedCategory, onCategoryChange }: CategoryTabsProps) {
   const handleChange = (_event: React.SyntheticEvent, newValue: Category) => {
     onCategoryChange(newValue);
   };
@@ -18,19 +15,9 @@ function CategoryTabs({
   return (
     <Paper sx={{ mb: 3 }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs
-          value={selectedCategory}
-          onChange={handleChange}
-          aria-label="カテゴリ選択タブ"
-          variant="fullWidth"
-        >
+        <Tabs value={selectedCategory} onChange={handleChange} aria-label="カテゴリ選択タブ" variant="fullWidth">
           {CATEGORIES.map(category => (
-            <Tab
-              key={category.name}
-              label={category.label}
-              value={category.name}
-              aria-label={`${category.label}カテゴリを選択`}
-            />
+            <Tab key={category.name} label={category.label} value={category.name} aria-label={`${category.label}カテゴリを選択`} />
           ))}
         </Tabs>
       </Box>

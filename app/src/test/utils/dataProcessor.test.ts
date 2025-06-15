@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  DataAggregator,
-  DataValidator,
-} from '../../../src/utils/dataProcessor';
+import { DataAggregator, DataValidator } from '../../../src/utils/dataProcessor';
 import type { UserData, DisplayUnit } from '../../../src/types';
 import { CATEGORIES } from '../../../src/constants';
 
@@ -55,22 +52,14 @@ describe('DataAggregator', () => {
 
   describe('filterByName', () => {
     it('should filter by user name correctly', () => {
-      const result = DataAggregator.filterByName(
-        sampleData,
-        'john_doe',
-        'user'
-      );
+      const result = DataAggregator.filterByName(sampleData, 'john_doe', 'user');
 
       expect(result).toHaveLength(2);
       expect(result.every(item => item.user_name === 'john_doe')).toBe(true);
     });
 
     it('should filter by repository name correctly', () => {
-      const result = DataAggregator.filterByName(
-        sampleData,
-        'repo1',
-        'repository'
-      );
+      const result = DataAggregator.filterByName(sampleData, 'repo1', 'repository');
 
       expect(result).toHaveLength(2);
       expect(result.every(item => item.repository_name === 'repo1')).toBe(true);
@@ -113,10 +102,7 @@ describe('DataAggregator', () => {
         { user_name: 'user2', repository_name: 'repo2', time: 2000, cost: 20 },
       ];
 
-      const result = DataAggregator.calculateFreeQuotaUsage(
-        actionsData,
-        actionsConfig
-      );
+      const result = DataAggregator.calculateFreeQuotaUsage(actionsData, actionsConfig);
 
       // 3000分 / 50000分 = 6%
       expect(result).toBeCloseTo(6.0, 1);
@@ -124,10 +110,7 @@ describe('DataAggregator', () => {
 
     it('should return null for category without free quota', () => {
       const codespacesConfig = CATEGORIES.find(c => c.name === 'codespaces')!;
-      const result = DataAggregator.calculateFreeQuotaUsage(
-        sampleData,
-        codespacesConfig
-      );
+      const result = DataAggregator.calculateFreeQuotaUsage(sampleData, codespacesConfig);
 
       expect(result).toBeNull();
     });
@@ -146,10 +129,7 @@ describe('DataAggregator', () => {
     });
 
     it('should return all items if count is less than limit', () => {
-      const result = DataAggregator.limitDisplayItems(
-        manyItems.slice(0, 50),
-        100
-      );
+      const result = DataAggregator.limitDisplayItems(manyItems.slice(0, 50), 100);
       expect(result).toHaveLength(50);
     });
   });

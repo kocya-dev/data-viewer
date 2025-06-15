@@ -1,9 +1,4 @@
-import type {
-  UserData,
-  AggregatedData,
-  DisplayUnit,
-  CategoryConfig,
-} from '../types';
+import type { UserData, AggregatedData, DisplayUnit, CategoryConfig } from '../types';
 
 /**
  * データ集計ユーティリティ
@@ -17,11 +12,7 @@ export class DataAggregator {
    * @param categoryConfig カテゴリ設定
    * @returns 集計されたデータの配列（降順ソート済み、使用量・無料枠情報含む）
    */
-  static aggregateByUnitWithUsage(
-    data: UserData[],
-    unit: DisplayUnit,
-    categoryConfig: CategoryConfig
-  ): AggregatedData[] {
+  static aggregateByUnitWithUsage(data: UserData[], unit: DisplayUnit, categoryConfig: CategoryConfig): AggregatedData[] {
     const groupKey = unit === 'user' ? 'user_name' : 'repository_name';
     const aggregationMap = new Map<string, { cost: number; usage: number }>();
 
@@ -34,10 +25,7 @@ export class DataAggregator {
       let itemUsage = 0;
       if (categoryConfig.fieldName === 'time' && item.time !== undefined) {
         itemUsage = item.time;
-      } else if (
-        categoryConfig.fieldName === 'capacity' &&
-        item.capacity !== undefined
-      ) {
+      } else if (categoryConfig.fieldName === 'capacity' && item.capacity !== undefined) {
         itemUsage = item.capacity;
       }
 
@@ -48,10 +36,7 @@ export class DataAggregator {
     }
 
     // 全体のコスト計算
-    const totalCost = Array.from(aggregationMap.values()).reduce(
-      (sum, entry) => sum + entry.cost,
-      0
-    );
+    const totalCost = Array.from(aggregationMap.values()).reduce((sum, entry) => sum + entry.cost, 0);
 
     // AggregatedDataの配列に変換し、降順ソート
     const result: AggregatedData[] = Array.from(aggregationMap.entries())
@@ -82,10 +67,7 @@ export class DataAggregator {
    * @param unit 集計単位（user または repository）
    * @returns 集計されたデータの配列（降順ソート済み）
    */
-  static aggregateByUnit(
-    data: UserData[],
-    unit: DisplayUnit
-  ): AggregatedData[] {
+  static aggregateByUnit(data: UserData[], unit: DisplayUnit): AggregatedData[] {
     const groupKey = unit === 'user' ? 'user_name' : 'repository_name';
     const aggregationMap = new Map<string, number>();
 
@@ -97,10 +79,7 @@ export class DataAggregator {
     }
 
     // 全体のコスト計算
-    const totalCost = Array.from(aggregationMap.values()).reduce(
-      (sum, cost) => sum + cost,
-      0
-    );
+    const totalCost = Array.from(aggregationMap.values()).reduce((sum, cost) => sum + cost, 0);
 
     // AggregatedDataの配列に変換し、降順ソート
     const result: AggregatedData[] = Array.from(aggregationMap.entries())
@@ -121,11 +100,7 @@ export class DataAggregator {
    * @param unit フィルタリング単位（user または repository）
    * @returns フィルタリングされたデータの配列
    */
-  static filterByName(
-    data: UserData[],
-    targetName: string,
-    unit: DisplayUnit
-  ): UserData[] {
+  static filterByName(data: UserData[], targetName: string, unit: DisplayUnit): UserData[] {
     const filterKey = unit === 'user' ? 'user_name' : 'repository_name';
     return data.filter(item => item[filterKey] === targetName);
   }
@@ -165,10 +140,7 @@ export class DataAggregator {
    * @param categoryConfig カテゴリ設定
    * @returns 使用率（パーセンテージ）、無料枠がない場合はnull
    */
-  static calculateFreeQuotaUsage(
-    data: UserData[],
-    categoryConfig: CategoryConfig
-  ): number | null {
+  static calculateFreeQuotaUsage(data: UserData[], categoryConfig: CategoryConfig): number | null {
     if (!categoryConfig.freeQuota) {
       return null;
     }
@@ -180,10 +152,7 @@ export class DataAggregator {
     for (const item of data) {
       if (freeQuota.fieldName === 'time' && item.time !== undefined) {
         totalUsage += item.time;
-      } else if (
-        freeQuota.fieldName === 'capacity' &&
-        item.capacity !== undefined
-      ) {
+      } else if (freeQuota.fieldName === 'capacity' && item.capacity !== undefined) {
         totalUsage += item.capacity;
       }
     }
@@ -201,10 +170,7 @@ export class DataAggregator {
    * @param maxItems 最大表示件数
    * @returns 制限されたデータの配列
    */
-  static limitDisplayItems(
-    data: AggregatedData[],
-    maxItems: number
-  ): AggregatedData[] {
+  static limitDisplayItems(data: AggregatedData[], maxItems: number): AggregatedData[] {
     return data.slice(0, maxItems);
   }
 
@@ -215,11 +181,7 @@ export class DataAggregator {
    * @param unit フィルタリング単位
    * @returns 月別コストデータの配列
    */
-  static convertToMonthlyTrend(
-    monthlyData: Map<string, UserData[]>,
-    targetName: string,
-    unit: DisplayUnit
-  ): Array<{ month: string; cost: number }> {
+  static convertToMonthlyTrend(monthlyData: Map<string, UserData[]>, targetName: string, unit: DisplayUnit): Array<{ month: string; cost: number }> {
     const result: Array<{ month: string; cost: number }> = [];
 
     for (const [monthKey, data] of monthlyData) {
@@ -275,10 +237,7 @@ export class DataAggregator {
       for (const item of filteredData) {
         if (categoryConfig.fieldName === 'time' && item.time !== undefined) {
           totalUsage += item.time;
-        } else if (
-          categoryConfig.fieldName === 'capacity' &&
-          item.capacity !== undefined
-        ) {
+        } else if (categoryConfig.fieldName === 'capacity' && item.capacity !== undefined) {
           totalUsage += item.capacity;
         }
       }
@@ -331,19 +290,11 @@ export class DataValidator {
       errors.push('コストが無効です');
     }
 
-    if (
-      data.time !== undefined &&
-      (typeof data.time !== 'number' || isNaN(data.time) || data.time < 0)
-    ) {
+    if (data.time !== undefined && (typeof data.time !== 'number' || isNaN(data.time) || data.time < 0)) {
       errors.push('時間が無効です');
     }
 
-    if (
-      data.capacity !== undefined &&
-      (typeof data.capacity !== 'number' ||
-        isNaN(data.capacity) ||
-        data.capacity < 0)
-    ) {
+    if (data.capacity !== undefined && (typeof data.capacity !== 'number' || isNaN(data.capacity) || data.capacity < 0)) {
       errors.push('容量が無効です');
     }
 
@@ -397,15 +348,9 @@ export class MultiMonthAggregator {
       if (filteredData.length > 0) {
         const firstItem = filteredData[0];
         if (firstItem.time !== undefined) {
-          totalUsage = filteredData.reduce(
-            (sum, item) => sum + (item.time || 0),
-            0
-          );
+          totalUsage = filteredData.reduce((sum, item) => sum + (item.time || 0), 0);
         } else if (firstItem.capacity !== undefined) {
-          totalUsage = filteredData.reduce(
-            (sum, item) => sum + (item.capacity || 0),
-            0
-          );
+          totalUsage = filteredData.reduce((sum, item) => sum + (item.capacity || 0), 0);
         }
       }
 
@@ -425,9 +370,7 @@ export class MultiMonthAggregator {
    * @param yearlyData 年間データ
    * @returns 四半期別集計データ
    */
-  static aggregateToQuarterly(
-    yearlyData: Array<{ month: string; cost: number; usage?: number }>
-  ): Array<{ quarter: string; cost: number; usage?: number }> {
+  static aggregateToQuarterly(yearlyData: Array<{ month: string; cost: number; usage?: number }>): Array<{ quarter: string; cost: number; usage?: number }> {
     const quarterlyMap = new Map<string, { cost: number; usage: number }>();
 
     for (const monthData of yearlyData) {
@@ -462,9 +405,7 @@ export class MultiMonthAggregator {
    * @param categoriesData カテゴリ別データマップ
    * @returns 統合されたサマリーデータ
    */
-  static generateCategorySummary(
-    categoriesData: Map<string, UserData[]>
-  ): Array<{ category: string; totalCost: number; itemCount: number }> {
+  static generateCategorySummary(categoriesData: Map<string, UserData[]>): Array<{ category: string; totalCost: number; itemCount: number }> {
     const result: Array<{
       category: string;
       totalCost: number;

@@ -1,13 +1,4 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Stack,
-  Chip,
-  LinearProgress,
-  Alert,
-} from '@mui/material';
+import { Card, CardContent, Typography, Box, Stack, Chip, LinearProgress, Alert } from '@mui/material';
 import { AttachMoney, Warning, CheckCircle } from '@mui/icons-material';
 import type { CategoryConfig } from '../../types';
 
@@ -18,12 +9,7 @@ interface DataSummaryProps {
   categoryConfig: CategoryConfig | undefined;
 }
 
-export function DataSummary({
-  totalCost,
-  dataCount,
-  freeQuotaUsage,
-  categoryConfig,
-}: DataSummaryProps) {
+export function DataSummary({ totalCost, dataCount, freeQuotaUsage, categoryConfig }: DataSummaryProps) {
   // 無料枠使用率に基づく警告レベルの判定
   const getQuotaWarningLevel = (usage: number | null) => {
     if (usage === null) return null;
@@ -53,24 +39,12 @@ export function DataSummary({
   return (
     <Card>
       <CardContent>
-        <Typography
-          variant="h6"
-          gutterBottom
-          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-        >
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <AttachMoney />
           サマリー情報
         </Typography>
 
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          spacing={3}
-          divider={
-            <Box
-              sx={{ borderLeft: 1, borderColor: 'divider', height: '100%' }}
-            />
-          }
-        >
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} divider={<Box sx={{ borderLeft: 1, borderColor: 'divider', height: '100%' }} />}>
           {/* コスト情報 */}
           <Box sx={{ flex: 1 }}>
             <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -79,11 +53,7 @@ export function DataSummary({
             <Typography variant="h4" color="primary" gutterBottom>
               {formatCurrency(totalCost)}
             </Typography>
-            <Chip
-              size="small"
-              label={`${dataCount}件のデータ`}
-              variant="outlined"
-            />
+            <Chip size="small" label={`${dataCount}件のデータ`} variant="outlined" />
           </Box>
 
           {/* 無料枠使用率 */}
@@ -93,18 +63,11 @@ export function DataSummary({
                 無料枠使用率
               </Typography>
 
-              <Box
-                sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}
-              >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                 <Typography
                   variant="h4"
                   sx={{
-                    color:
-                      warningLevel === 'error'
-                        ? 'error.main'
-                        : warningLevel === 'warning'
-                          ? 'warning.main'
-                          : 'success.main',
+                    color: warningLevel === 'error' ? 'error.main' : warningLevel === 'warning' ? 'warning.main' : 'success.main',
                   }}
                 >
                   {freeQuotaUsage.toFixed(1)}%
@@ -117,20 +80,12 @@ export function DataSummary({
               <LinearProgress
                 variant="determinate"
                 value={Math.min(freeQuotaUsage, 100)}
-                color={
-                  warningLevel === 'error'
-                    ? 'error'
-                    : warningLevel === 'warning'
-                      ? 'warning'
-                      : 'success'
-                }
+                color={warningLevel === 'error' ? 'error' : warningLevel === 'warning' ? 'warning' : 'success'}
                 sx={{ mb: 1 }}
               />
 
               <Typography variant="body2" color="text.secondary">
-                使用量: {formatUsageValue(categoryConfig, freeQuotaUsage)} /{' '}
-                {categoryConfig.freeQuota?.limit.toLocaleString()}{' '}
-                {categoryConfig.freeQuota?.unit}
+                使用量: {formatUsageValue(categoryConfig, freeQuotaUsage)} / {categoryConfig.freeQuota?.limit.toLocaleString()} {categoryConfig.freeQuota?.unit}
               </Typography>
 
               {/* 無料枠超過の警告 */}

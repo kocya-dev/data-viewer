@@ -7,12 +7,7 @@ interface LoadingSpinnerProps {
   height?: number;
 }
 
-function LoadingSpinner({ 
-  message = 'データを読み込み中...', 
-  size = 40,
-  variant = 'spinner',
-  height = 400 
-}: LoadingSpinnerProps) {
+function LoadingSpinner({ message = 'データを読み込み中...', size = 40, variant = 'spinner', height = 400 }: LoadingSpinnerProps) {
   if (variant === 'skeleton') {
     return (
       <Box sx={{ height, p: 2 }}>

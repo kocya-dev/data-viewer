@@ -4,9 +4,7 @@ import { describe, it, expect } from 'vitest';
 import { theme } from '../../utils/theme';
 import { LoadingSpinner } from '../../components/ui/LoadingSpinner';
 
-const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider theme={theme}>{children}</ThemeProvider>
-);
+const TestWrapper = ({ children }: { children: React.ReactNode }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 
 describe('LoadingSpinner', () => {
   it('should render spinner with default message', () => {

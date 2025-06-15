@@ -108,8 +108,7 @@ jane_smith,web-app,5,0.30`;
         if (url.includes('20240101-actions.csv')) {
           return {
             ok: true,
-            text: async () =>
-              'user_name,repository_name,time,cost\njohn,repo1,100,5.00',
+            text: async () => 'user_name,repository_name,time,cost\njohn,repo1,100,5.00',
           } as Response;
         } else if (url.includes('20240201-actions.csv')) {
           return {
@@ -121,11 +120,7 @@ jane_smith,web-app,5,0.30`;
       };
 
       try {
-        const result = await csvService.loadMultipleCsvData(
-          'actions',
-          'monthly',
-          dates
-        );
+        const result = await csvService.loadMultipleCsvData('actions', 'monthly', dates);
 
         expect(result.size).toBe(2);
         expect(result.get('20240101')).toHaveLength(1);
@@ -145,8 +140,7 @@ jane_smith,web-app,5,0.30`;
       global.fetch = async () => {
         return {
           ok: true,
-          text: async () =>
-            'user_name,repository_name,time,cost\njohn,repo1,100,5.00',
+          text: async () => 'user_name,repository_name,time,cost\njohn,repo1,100,5.00',
         } as Response;
       };
 

@@ -1,12 +1,5 @@
 import type { ReactNode } from 'react';
-import {
-  AppBar,
-  Box,
-  Container,
-  Toolbar,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { AppBar, Box, Container, Toolbar, Typography, useTheme } from '@mui/material';
 import { BarChart as BarChartIcon } from '@mui/icons-material';
 
 interface LayoutProps {

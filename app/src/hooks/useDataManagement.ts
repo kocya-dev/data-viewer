@@ -1,11 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type {
-  UserData,
-  Category,
-  Period,
-  ViewMode,
-  DisplayUnit,
-} from '../types';
+import type { UserData, Category, Period, ViewMode, DisplayUnit } from '../types';
 import { csvService } from '../services/csvService';
 import { DataValidator, DataAggregator } from '../utils/dataProcessor';
 import { configService } from '../services/configService';
@@ -20,33 +14,27 @@ export const useCsvData = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadData = useCallback(
-    async (category: Category, period: Period, date: string) => {
-      setLoading(true);
-      setError(null);
+  const loadData = useCallback(async (category: Category, period: Period, date: string) => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        const rawData = await csvService.loadCsvData(category, period, date);
-        const validData = DataValidator.filterValidData(rawData);
+    try {
+      const rawData = await csvService.loadCsvData(category, period, date);
+      const validData = DataValidator.filterValidData(rawData);
 
-        setData(validData);
+      setData(validData);
 
-        if (validData.length !== rawData.length) {
-          console.warn(
-            `${rawData.length - validData.length} 件の無効なデータが除外されました`
-          );
-        }
-      } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : 'データの読み込みに失敗しました';
-        setError(errorMessage);
-        setData([]);
-      } finally {
-        setLoading(false);
+      if (validData.length !== rawData.length) {
+        console.warn(`${rawData.length - validData.length} 件の無効なデータが除外されました`);
       }
-    },
-    []
-  );
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'データの読み込みに失敗しました';
+      setError(errorMessage);
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const clearData = useCallback(() => {
     setData([]);
@@ -131,12 +119,8 @@ export const useSelectionOptions = (data: UserData[]) => {
     }
 
     // 一意のユーザー・リポジトリ名を抽出
-    const uniqueUsers = Array.from(
-      new Set(data.map(item => item.user_name))
-    ).sort();
-    const uniqueRepositories = Array.from(
-      new Set(data.map(item => item.repository_name))
-    ).sort();
+    const uniqueUsers = Array.from(new Set(data.map(item => item.user_name))).sort();
+    const uniqueRepositories = Array.from(new Set(data.map(item => item.repository_name))).sort();
 
     setUsers(uniqueUsers);
     setRepositories(uniqueRepositories);
@@ -151,9 +135,7 @@ export const useSelectionOptions = (data: UserData[]) => {
 /**
  * 年間データからユーザー・リポジトリ選択肢を生成するフック
  */
-export const useYearlySelectionOptions = (
-  yearlyData: Map<string, UserData[]>
-) => {
+export const useYearlySelectionOptions = (yearlyData: Map<string, UserData[]>) => {
   const [users, setUsers] = useState<string[]>([]);
   const [repositories, setRepositories] = useState<string[]>([]);
 
@@ -171,12 +153,8 @@ export const useYearlySelectionOptions = (
     });
 
     // 一意のユーザー・リポジトリ名を抽出
-    const uniqueUsers = Array.from(
-      new Set(allData.map(item => item.user_name))
-    ).sort();
-    const uniqueRepositories = Array.from(
-      new Set(allData.map(item => item.repository_name))
-    ).sort();
+    const uniqueUsers = Array.from(new Set(allData.map(item => item.user_name))).sort();
+    const uniqueRepositories = Array.from(new Set(allData.map(item => item.repository_name))).sort();
 
     setUsers(uniqueUsers);
     setRepositories(uniqueRepositories);
@@ -193,59 +171,53 @@ export const useYearlySelectionOptions = (
  * 期間に応じて適切な日付文字列を生成
  */
 export const useDateFormatter = () => {
-  const formatDateForFile = useCallback(
-    (date: Date | null, period: Period): string => {
-      if (!date) {
+  const formatDateForFile = useCallback((date: Date | null, period: Period): string => {
+    if (!date) {
+      return '';
+    }
+
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    switch (period) {
+      case 'weekly':
+        // 週単位の場合は指定日付をそのまま使用（YYYYMMDD形式）
+        return `${year}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`;
+
+      case 'monthly':
+      case 'quarterly':
+        // 月単位・四半期単位の場合は月初日を使用（YYYYMM01形式）
+        return `${year}${month.toString().padStart(2, '0')}01`;
+
+      default:
         return '';
-      }
+    }
+  }, []);
 
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
+  const formatDateForDisplay = useCallback((date: Date | null, period: Period): string => {
+    if (!date) {
+      return '';
+    }
 
-      switch (period) {
-        case 'weekly':
-          // 週単位の場合は指定日付をそのまま使用（YYYYMMDD形式）
-          return `${year}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`;
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
 
-        case 'monthly':
-        case 'quarterly':
-          // 月単位・四半期単位の場合は月初日を使用（YYYYMM01形式）
-          return `${year}${month.toString().padStart(2, '0')}01`;
+    switch (period) {
+      case 'weekly':
+        return date.toLocaleDateString('ja-JP');
 
-        default:
-          return '';
-      }
-    },
-    []
-  );
+      case 'monthly':
+        return `${year}年${month}月`;
 
-  const formatDateForDisplay = useCallback(
-    (date: Date | null, period: Period): string => {
-      if (!date) {
+      case 'quarterly':
+        const quarter = Math.ceil(month / 3);
+        return `${year}年Q${quarter}`;
+
+      default:
         return '';
-      }
-
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-
-      switch (period) {
-        case 'weekly':
-          return date.toLocaleDateString('ja-JP');
-
-        case 'monthly':
-          return `${year}年${month}月`;
-
-        case 'quarterly':
-          const quarter = Math.ceil(month / 3);
-          return `${year}年Q${quarter}`;
-
-        default:
-          return '';
-      }
-    },
-    []
-  );
+    }
+  }, []);
 
   return {
     formatDateForFile,
@@ -258,9 +230,7 @@ export const useDateFormatter = () => {
  * 年間データの読み込み、月別推移、全体サマリーなどを管理
  */
 export const useIntegratedDataManagement = () => {
-  const [yearlyData, setYearlyData] = useState<Map<string, UserData[]>>(
-    new Map()
-  );
+  const [yearlyData, setYearlyData] = useState<Map<string, UserData[]>>(new Map());
   const [availableMonths, setAvailableMonths] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -268,50 +238,41 @@ export const useIntegratedDataManagement = () => {
   /**
    * 指定年の年間データを読み込み
    */
-  const loadYearlyData = useCallback(
-    async (category: Category, year: number) => {
-      setLoading(true);
-      setError(null);
+  const loadYearlyData = useCallback(async (category: Category, year: number) => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        const data = await csvService.loadYearlyData(category, year);
-        setYearlyData(data);
+    try {
+      const data = await csvService.loadYearlyData(category, year);
+      setYearlyData(data);
 
-        // 実際にデータが存在する月のリストを生成
-        const months = Array.from(data.keys())
-          .filter(month => data.get(month)!.length > 0)
-          .sort();
-        setAvailableMonths(months);
-      } catch (err) {
-        const errorMessage =
-          err instanceof Error
-            ? err.message
-            : '年間データの読み込みに失敗しました';
-        setError(errorMessage);
-        setYearlyData(new Map());
-        setAvailableMonths([]);
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
+      // 実際にデータが存在する月のリストを生成
+      const months = Array.from(data.keys())
+        .filter(month => data.get(month)!.length > 0)
+        .sort();
+      setAvailableMonths(months);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '年間データの読み込みに失敗しました';
+      setError(errorMessage);
+      setYearlyData(new Map());
+      setAvailableMonths([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   /**
    * 利用可能なファイルをチェック
    */
-  const checkAvailableFiles = useCallback(
-    async (category: Category, period: Period) => {
-      try {
-        const files = await csvService.checkAvailableFiles(category, period);
-        return files;
-      } catch (err) {
-        console.warn('ファイルチェックに失敗:', err);
-        return [];
-      }
-    },
-    []
-  );
+  const checkAvailableFiles = useCallback(async (category: Category, period: Period) => {
+    try {
+      const files = await csvService.checkAvailableFiles(category, period);
+      return files;
+    } catch (err) {
+      console.warn('ファイルチェックに失敗:', err);
+      return [];
+    }
+  }, []);
 
   /**
    * データをクリア
@@ -355,9 +316,7 @@ export const useDataSummary = (data: UserData[], categoryConfig?: any) => {
     }
 
     const totalCost = DataAggregator.calculateTotalCost(data);
-    const freeQuotaUsage = categoryConfig
-      ? DataAggregator.calculateFreeQuotaUsage(data, categoryConfig)
-      : null;
+    const freeQuotaUsage = categoryConfig ? DataAggregator.calculateFreeQuotaUsage(data, categoryConfig) : null;
 
     setSummary({
       totalCost,
@@ -403,19 +362,11 @@ export const useMonthlyTrendData = (
 
         // ユーザー詳細モードの場合、指定ユーザーでフィルタ
         if (viewMode === 'user-detail' && selectedUser) {
-          filteredData = DataAggregator.filterByName(
-            data,
-            selectedUser,
-            'user'
-          );
+          filteredData = DataAggregator.filterByName(data, selectedUser, 'user');
         }
         // リポジトリ詳細モードの場合、指定リポジトリでフィルタ
         else if (viewMode === 'repository-detail' && selectedRepository) {
-          filteredData = DataAggregator.filterByName(
-            data,
-            selectedRepository,
-            'repository'
-          );
+          filteredData = DataAggregator.filterByName(data, selectedRepository, 'repository');
         }
 
         // 月別コストを計算
@@ -426,10 +377,7 @@ export const useMonthlyTrendData = (
         for (const item of filteredData) {
           if (categoryConfig.fieldName === 'time' && item.time !== undefined) {
             totalUsage += item.time;
-          } else if (
-            categoryConfig.fieldName === 'capacity' &&
-            item.capacity !== undefined
-          ) {
+          } else if (categoryConfig.fieldName === 'capacity' && item.capacity !== undefined) {
             totalUsage += item.capacity;
           }
         }

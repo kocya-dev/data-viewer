@@ -15,19 +15,9 @@ function ViewModeTabs({ selectedMode, onModeChange }: ViewModeTabsProps) {
   return (
     <Paper sx={{ mb: 3 }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs
-          value={selectedMode}
-          onChange={handleChange}
-          aria-label="表示モード選択タブ"
-          variant="fullWidth"
-        >
+        <Tabs value={selectedMode} onChange={handleChange} aria-label="表示モード選択タブ" variant="fullWidth">
           {VIEW_MODES.map(mode => (
-            <Tab
-              key={mode.value}
-              label={mode.label}
-              value={mode.value}
-              aria-label={`${mode.label}モードを選択`}
-            />
+            <Tab key={mode.value} label={mode.label} value={mode.value} aria-label={`${mode.label}モードを選択`} />
           ))}
         </Tabs>
       </Box>

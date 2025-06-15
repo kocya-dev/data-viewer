@@ -13,14 +13,10 @@ vi.mock('recharts', () => ({
   YAxis: () => <div data-testid="y-axis" />,
   CartesianGrid: () => <div data-testid="cartesian-grid" />,
   Tooltip: () => <div data-testid="tooltip" />,
-  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="responsive-container">{children}</div>
-  ),
+  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="responsive-container">{children}</div>,
 }));
 
-const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider theme={theme}>{children}</ThemeProvider>
-);
+const TestWrapper = ({ children }: { children: React.ReactNode }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 
 describe('DetailChart', () => {
   const mockData: MonthlyData[] = [
@@ -31,7 +27,7 @@ describe('DetailChart', () => {
     },
     {
       month: '2024年2月',
-      cost: 200.50,
+      cost: 200.5,
       dataCount: 32,
     },
     {
@@ -74,7 +70,7 @@ describe('DetailChart', () => {
 
   it('should handle different titles', () => {
     const repoTitle = 'リポジトリ「my-repo」の月別推移 (2024年)';
-    
+
     const { rerender } = render(
       <TestWrapper>
         <DetailChart data={mockData} title={testTitle} />

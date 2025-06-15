@@ -64,33 +64,16 @@ export function DataFilters({
           フィルター設定
         </Typography>
 
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          spacing={3}
-          flexWrap="wrap"
-        >
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} flexWrap="wrap">
           {/* 日付選択（全体概要モードのみ） */}
           {viewMode === 'overview' && (
             <Box sx={{ minWidth: 200 }}>
-              <LocalizationProvider
-                dateAdapter={AdapterDateFns}
-                adapterLocale={ja}
-              >
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ja}>
                 <DatePicker
-                  label={
-                    period === 'weekly'
-                      ? '週の開始日'
-                      : period === 'monthly'
-                        ? '月を選択'
-                        : '四半期を選択'
-                  }
+                  label={period === 'weekly' ? '週の開始日' : period === 'monthly' ? '月を選択' : '四半期を選択'}
                   value={selectedDate}
                   onChange={onDateChange}
-                  views={
-                    period === 'weekly'
-                      ? ['year', 'month', 'day']
-                      : ['year', 'month']
-                  }
+                  views={period === 'weekly' ? ['year', 'month', 'day'] : ['year', 'month']}
                   slotProps={{
                     textField: {
                       fullWidth: true,
@@ -107,11 +90,7 @@ export function DataFilters({
             <Box sx={{ minWidth: 150 }}>
               <FormControl fullWidth size="small">
                 <InputLabel>年</InputLabel>
-                <Select
-                  value={selectedYear || new Date().getFullYear()}
-                  label="年"
-                  onChange={e => onYearChange && onYearChange(Number(e.target.value))}
-                >
+                <Select value={selectedYear || new Date().getFullYear()} label="年" onChange={e => onYearChange && onYearChange(Number(e.target.value))}>
                   {Array.from({ length: 5 }, (_, i) => {
                     const year = new Date().getFullYear() - i;
                     return (
@@ -130,16 +109,9 @@ export function DataFilters({
             <Box sx={{ minWidth: 150 }}>
               <FormControl fullWidth size="small">
                 <InputLabel>期間</InputLabel>
-                <Select
-                  value={period}
-                  label="期間"
-                  onChange={e => onPeriodChange(e.target.value as Period)}
-                >
+                <Select value={period} label="期間" onChange={e => onPeriodChange(e.target.value as Period)}>
                   {PERIODS.map(periodOption => (
-                    <MenuItem
-                      key={periodOption.value}
-                      value={periodOption.value}
-                    >
+                    <MenuItem key={periodOption.value} value={periodOption.value}>
                       {periodOption.label}
                     </MenuItem>
                   ))}
@@ -155,20 +127,9 @@ export function DataFilters({
                 <FormLabel component="legend" sx={{ fontSize: '0.875rem' }}>
                   表示単位
                 </FormLabel>
-                <RadioGroup
-                  row
-                  value={displayUnit}
-                  onChange={e =>
-                    onDisplayUnitChange(e.target.value as DisplayUnit)
-                  }
-                >
+                <RadioGroup row value={displayUnit} onChange={e => onDisplayUnitChange(e.target.value as DisplayUnit)}>
                   {DISPLAY_UNITS.map(unit => (
-                    <FormControlLabel
-                      key={unit.value}
-                      value={unit.value}
-                      control={<Radio size="small" />}
-                      label={unit.label}
-                    />
+                    <FormControlLabel key={unit.value} value={unit.value} control={<Radio size="small" />} label={unit.label} />
                   ))}
                 </RadioGroup>
               </FormControl>
@@ -182,14 +143,7 @@ export function DataFilters({
                 options={users}
                 value={selectedUser || null}
                 onChange={(_, newValue) => onUserChange(newValue || '')}
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    label="ユーザーを選択"
-                    size="small"
-                    fullWidth
-                  />
-                )}
+                renderInput={params => <TextField {...params} label="ユーザーを選択" size="small" fullWidth />}
                 noOptionsText="ユーザーが見つかりません"
               />
             </Box>
@@ -202,14 +156,7 @@ export function DataFilters({
                 options={repositories}
                 value={selectedRepository || null}
                 onChange={(_, newValue) => onRepositoryChange(newValue || '')}
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    label="リポジトリを選択"
-                    size="small"
-                    fullWidth
-                  />
-                )}
+                renderInput={params => <TextField {...params} label="リポジトリを選択" size="small" fullWidth />}
                 noOptionsText="リポジトリが見つかりません"
               />
             </Box>

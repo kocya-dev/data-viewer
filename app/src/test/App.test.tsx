@@ -5,15 +5,11 @@ import App from '../App';
 describe('App', () => {
   it('アプリタイトルが表示される', () => {
     render(<App />);
-    expect(
-      screen.getByText('GitHub Organization 課金可視化')
-    ).toBeInTheDocument();
+    expect(screen.getByText('GitHub Organization 課金可視化')).toBeInTheDocument();
   });
 
   it('ダッシュボードが表示される', () => {
     render(<App />);
-    expect(
-      screen.getByText('課金データ可視化ダッシュボード')
-    ).toBeInTheDocument();
+    expect(screen.getByText('課金データ可視化ダッシュボード')).toBeInTheDocument();
   });
 });

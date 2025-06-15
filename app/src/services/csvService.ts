@@ -18,11 +18,7 @@ export class CsvService {
    * @param date 日付（YYYYMMDD形式）
    * @returns UserDataの配列
    */
-  async loadCsvData(
-    category: Category,
-    period: Period,
-    date: string
-  ): Promise<UserData[]> {
+  async loadCsvData(category: Category, period: Period, date: string): Promise<UserData[]> {
     const fileName = `${date}-${category}.csv`;
     const filePath = `${this.baseUrl}/${period}/${fileName}`;
 
@@ -30,9 +26,7 @@ export class CsvService {
       const response = await fetch(filePath);
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to load CSV file: ${filePath} (${response.status})`
-        );
+        throw new Error(`Failed to load CSV file: ${filePath} (${response.status})`);
       }
 
       const csvText = await response.text();
@@ -110,11 +104,7 @@ export class CsvService {
    * @param dates 日付の配列（YYYYMMDD形式）
    * @returns 日付をキーとしたUserDataマップ
    */
-  async loadMultipleCsvData(
-    category: Category,
-    period: Period,
-    dates: string[]
-  ): Promise<Map<string, UserData[]>> {
+  async loadMultipleCsvData(category: Category, period: Period, dates: string[]): Promise<Map<string, UserData[]>> {
     const result = new Map<string, UserData[]>();
     const loadPromises = dates.map(async date => {
       try {
@@ -141,10 +131,7 @@ export class CsvService {
    * @param year 年（YYYY形式）
    * @returns 月をキーとしたUserDataマップ（キー形式：YYYY-MM）
    */
-  async loadYearlyData(
-    category: Category,
-    year: number
-  ): Promise<Map<string, UserData[]>> {
+  async loadYearlyData(category: Category, year: number): Promise<Map<string, UserData[]>> {
     const dates: string[] = [];
 
     // 1月から12月のデータファイル名を生成
@@ -173,10 +160,7 @@ export class CsvService {
    * @param period 期間
    * @returns 存在するファイルの日付配列
    */
-  async checkAvailableFiles(
-    category: Category,
-    period: Period
-  ): Promise<string[]> {
+  async checkAvailableFiles(category: Category, period: Period): Promise<string[]> {
     const possibleFiles = this.generateAvailableFiles();
     const availableFiles: string[] = [];
 

@@ -1,12 +1,4 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { TooltipProps } from 'recharts';
 import { Box, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { CHART_COLORS } from '../../constants';
@@ -23,13 +15,7 @@ interface CustomTooltipProps extends TooltipProps<number, string> {
   category?: string; // カテゴリ情報を追加
 }
 
-function CustomTooltip({
-  active,
-  payload,
-  label,
-  displayUnit,
-  category,
-}: CustomTooltipProps) {
+function CustomTooltip({ active, payload, label, displayUnit, category }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const data = payload[0].payload as AggregatedData;
     return (
@@ -60,31 +46,18 @@ function CustomTooltip({
           </Typography>
         )}
         {data.usage !== undefined && data.usageUnit && (
-          <Typography
-            variant="caption"
-            color="info.main"
-            gutterBottom
-            sx={{ fontStyle: 'italic' }}
-          >
+          <Typography variant="caption" color="info.main" gutterBottom sx={{ fontStyle: 'italic' }}>
             コスト算出: {data.usage.toLocaleString()}
             {data.usageUnit} → ${data.cost.toFixed(2)}
           </Typography>
         )}
         {data.freeQuotaUsage !== undefined && (
-          <Typography
-            variant="body2"
-            color={data.freeQuotaUsage > 90 ? 'warning.main' : 'info.main'}
-            gutterBottom
-          >
+          <Typography variant="body2" color={data.freeQuotaUsage > 90 ? 'warning.main' : 'info.main'} gutterBottom>
             無料枠使用率: {data.freeQuotaUsage.toFixed(1)}%
           </Typography>
         )}
         {category && (
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ mt: 0.5, display: 'block' }}
-          >
+          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
             カテゴリ: {category}
           </Typography>
         )}
@@ -101,14 +74,7 @@ function OverviewChart({ data, displayUnit, category }: OverviewChartProps) {
 
   if (data.length === 0) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height={400}
-        bgcolor="grey.50"
-        borderRadius={1}
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" height={400} bgcolor="grey.50" borderRadius={1}>
         <Typography variant="body2" color="text.secondary">
           表示するデータがありません
         </Typography>
@@ -139,32 +105,16 @@ function OverviewChart({ data, displayUnit, category }: OverviewChartProps) {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
-          <XAxis
-            type="number"
-            tickFormatter={value => `$${value.toFixed(0)}`}
-            style={{ fontSize }}
-          />
-          <YAxis
-            type="category"
-            dataKey="name"
-            width={yAxisWidth}
-            style={{ fontSize }}
-            interval={0}
-          />
-          <Tooltip
-            content={
-              <CustomTooltip displayUnit={displayUnit} category={category} />
-            }
-            cursor={{ fill: theme.palette.action.hover }}
-          />
+          <XAxis type="number" tickFormatter={value => `$${value.toFixed(0)}`} style={{ fontSize }} />
+          <YAxis type="category" dataKey="name" width={yAxisWidth} style={{ fontSize }} interval={0} />
+          <Tooltip content={<CustomTooltip displayUnit={displayUnit} category={category} />} cursor={{ fill: theme.palette.action.hover }} />
           <Bar
             dataKey="cost"
             fill={CHART_COLORS.primary}
             radius={[0, 4, 4, 0]}
             label={{
               position: 'right',
-              formatter: (value: number, entry: AggregatedData) =>
-                `$${value.toFixed(2)} ${entry ? `(${entry.percentage.toFixed(1)}%)` : ''}`,
+              formatter: (value: number, entry: AggregatedData) => `$${value.toFixed(2)} ${entry ? `(${entry.percentage.toFixed(1)}%)` : ''}`,
               style: {
                 fontSize: labelFontSize,
                 fill: theme.palette.text.secondary,

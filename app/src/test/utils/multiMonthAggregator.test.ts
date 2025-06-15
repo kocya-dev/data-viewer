@@ -31,11 +31,7 @@ describe('MultiMonthAggregator', () => {
 
   describe('generateYearlyTrend', () => {
     it('should generate yearly trend for a specific user', () => {
-      const trend = MultiMonthAggregator.generateYearlyTrend(
-        sampleData,
-        'john',
-        'user'
-      );
+      const trend = MultiMonthAggregator.generateYearlyTrend(sampleData, 'john', 'user');
 
       expect(trend).toHaveLength(2);
       expect(trend[0]).toEqual({
@@ -51,11 +47,7 @@ describe('MultiMonthAggregator', () => {
     });
 
     it('should generate yearly trend for a specific repository', () => {
-      const trend = MultiMonthAggregator.generateYearlyTrend(
-        sampleData,
-        'repo1',
-        'repository'
-      );
+      const trend = MultiMonthAggregator.generateYearlyTrend(sampleData, 'repo1', 'repository');
 
       expect(trend).toHaveLength(2);
       expect(trend[0]).toEqual({
@@ -71,11 +63,7 @@ describe('MultiMonthAggregator', () => {
     });
 
     it('should return zero cost for non-existent target', () => {
-      const trend = MultiMonthAggregator.generateYearlyTrend(
-        sampleData,
-        'nonexistent',
-        'user'
-      );
+      const trend = MultiMonthAggregator.generateYearlyTrend(sampleData, 'nonexistent', 'user');
 
       expect(trend).toHaveLength(2);
       expect(trend[0].cost).toBe(0);
@@ -141,8 +129,7 @@ describe('MultiMonthAggregator', () => {
         ],
       ]);
 
-      const summary =
-        MultiMonthAggregator.generateCategorySummary(categoriesData);
+      const summary = MultiMonthAggregator.generateCategorySummary(categoriesData);
 
       expect(summary).toHaveLength(2);
       expect(summary[0]).toEqual({

@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  ConfigService,
-  categoryUtils,
-} from '../../../src/services/configService';
+import { ConfigService, categoryUtils } from '../../../src/services/configService';
 import type { CategoryConfig } from '../../../src/types';
 
 describe('ConfigService', () => {
@@ -143,9 +140,7 @@ describe('ConfigService', () => {
       const result = configService.validateCategoryConfig(invalidConfig);
 
       expect(result.isValid).toBe(false);
-      expect(result.errors).toContain(
-        '無料枠の上限は0以上である必要があります'
-      );
+      expect(result.errors).toContain('無料枠の上限は0以上である必要があります');
       expect(result.errors).toContain('無料枠のカテゴリ名が一致しません');
       expect(result.errors).toContain('無料枠のフィールド名が一致しません');
     });
