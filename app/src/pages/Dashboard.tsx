@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Box, Typography, Card, CardContent, Alert, Stack } from '@mui/material';
 import { CategoryTabs } from '../components/features/CategoryTabs';
 import { ViewModeTabs } from '../components/features/ViewModeTabs';
@@ -79,19 +79,29 @@ function Dashboard() {
   }, [viewMode, category, selectedYear, loadYearlyData, clearYearlyData]);
 
   // カテゴリ設定を取得
-  const categoryConfig = configService.getCategoryConfig(category);
+  const categoryConfig = useMemo(() => configService.getCategoryConfig(category), [category]);
 
   // 現在のローディング状態とエラー状態
   const currentLoading = viewMode === 'overview' ? loading : yearlyLoading;
   const currentError = viewMode === 'overview' ? error : yearlyError;
 
-  // 全体概要モード用のデータ集計（使用量情報付き）
-  const aggregatedData =
-    viewMode === 'overview' && data.length > 0 && categoryConfig ? DataAggregator.aggregateByUnitWithUsage(data, displayUnit, categoryConfig) : [];
+  // 全体概要モード用のデータ集計（使用量情報付き）- メモ化
+  const aggregatedData = useMemo(() => {
+    return viewMode === 'overview' && data.length > 0 && categoryConfig 
+      ? DataAggregator.aggregateByUnitWithUsage(data, displayUnit, categoryConfig) 
+      : [];
+  }, [viewMode, data, displayUnit, categoryConfig]);
 
-  // 全体概要モード用のサマリー
-  const totalCost = viewMode === 'overview' ? DataAggregator.calculateTotalCost(data) : 0;
-  const freeQuotaUsage = viewMode === 'overview' && categoryConfig ? DataAggregator.calculateFreeQuotaUsage(data, categoryConfig) : null;
+  // 全体概要モード用のサマリー - メモ化
+  const totalCost = useMemo(() => {
+    return viewMode === 'overview' ? DataAggregator.calculateTotalCost(data) : 0;
+  }, [viewMode, data]);
+
+  const freeQuotaUsage = useMemo(() => {
+    return viewMode === 'overview' && categoryConfig 
+      ? DataAggregator.calculateFreeQuotaUsage(data, categoryConfig) 
+      : null;
+  }, [viewMode, data, categoryConfig]);
 
   // 詳細モード用のデータ存在チェック
   const hasDetailData = viewMode !== 'overview' && yearlyData.size > 0;

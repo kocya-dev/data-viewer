@@ -7,7 +7,7 @@ describe('ConfigService', () => {
 
   beforeEach(() => {
     // 各テストで新しいインスタンスを作成（シングルトンをリセット）
-    // @ts-ignore - accessing private constructor for testing
+    // @ts-expect-error - テスト用の不正なカテゴリ - accessing private constructor for testing
     configService = new ConfigService();
   });
 

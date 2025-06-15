@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { DataAggregator, DataValidator } from '../../../src/utils/dataProcessor';
-import type { UserData, DisplayUnit } from '../../../src/types';
+import type { UserData } from '../../../src/types';
 import { CATEGORIES } from '../../../src/constants';
 
 describe('DataAggregator', () => {

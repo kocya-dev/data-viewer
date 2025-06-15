@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { UserData, Category, Period, ViewMode, DisplayUnit } from '../types';
+import type { UserData, Category, Period, ViewMode, DisplayUnit, CategoryConfig } from '../types';
 import { csvService } from '../services/csvService';
 import { DataValidator, DataAggregator } from '../utils/dataProcessor';
 import { configService } from '../services/configService';
@@ -210,9 +210,10 @@ export const useDateFormatter = () => {
       case 'monthly':
         return `${year}年${month}月`;
 
-      case 'quarterly':
+      case 'quarterly': {
         const quarter = Math.ceil(month / 3);
         return `${year}年Q${quarter}`;
+      }
 
       default:
         return '';
@@ -298,7 +299,7 @@ export const useIntegratedDataManagement = () => {
  * データサマリー生成用カスタムフック
  * 読み込まれたデータから表示用サマリーを生成
  */
-export const useDataSummary = (data: UserData[], categoryConfig?: any) => {
+export const useDataSummary = (data: UserData[], categoryConfig?: CategoryConfig) => {
   const [summary, setSummary] = useState({
     totalCost: 0,
     itemCount: 0,

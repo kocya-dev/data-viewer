@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { MultiMonthAggregator } from '../../../src/utils/dataProcessor';
-import type { UserData, DisplayUnit } from '../../../src/types';
+import type { UserData } from '../../../src/types';
 
 describe('MultiMonthAggregator', () => {
   let sampleData: Map<string, UserData[]>;

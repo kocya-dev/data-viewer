@@ -10,7 +10,7 @@ describe('CsvService', () => {
 john_doe,my-repo,8,0.75
 jane_smith,web-app,5,0.30`;
 
-      // @ts-ignore - accessing private method for testing
+      // @ts-expect-error - accessing private method for testing
       const result = csvService.parseCsv(csvText, 'actions');
 
       expect(result).toHaveLength(2);
@@ -33,7 +33,7 @@ jane_smith,web-app,5,0.30`;
 john_doe,my-repo,10,3.00
 jane_smith,web-app,4,1.20`;
 
-      // @ts-ignore - accessing private method for testing
+      // @ts-expect-error - accessing private method for testing
       const result = csvService.parseCsv(csvText, 'storage');
 
       expect(result).toHaveLength(2);
@@ -48,7 +48,7 @@ jane_smith,web-app,4,1.20`;
     it('should handle empty CSV gracefully', () => {
       const csvText = '';
 
-      // @ts-ignore - accessing private method for testing
+      // @ts-expect-error - accessing private method for testing
       const result = csvService.parseCsv(csvText, 'actions');
 
       expect(result).toHaveLength(0);
@@ -60,7 +60,7 @@ john_doe,my-repo,8,0.75
 invalid,line
 jane_smith,web-app,5,0.30`;
 
-      // @ts-ignore - accessing private method for testing
+      // @ts-expect-error - accessing private method for testing
       const result = csvService.parseCsv(csvText, 'actions');
 
       expect(result).toHaveLength(2);
@@ -73,7 +73,7 @@ jane_smith,web-app,5,0.30`;
 john_doe,my-repo,8,invalid_cost
 jane_smith,web-app,5,0.30`;
 
-      // @ts-ignore - accessing private method for testing
+      // @ts-expect-error - accessing private method for testing
       const result = csvService.parseCsv(csvText, 'actions');
 
       expect(result).toHaveLength(1);
