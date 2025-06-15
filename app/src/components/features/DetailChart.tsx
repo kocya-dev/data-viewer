@@ -1,6 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { TooltipProps } from 'recharts';
-import { Box, Typography, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { CHART_COLORS } from '../../constants';
 
 interface MonthlyData {
@@ -76,8 +76,6 @@ function CustomTooltip({ active, payload, label, category }: CustomTooltipProps)
 
 function DetailChart({ data, title, category }: DetailChartProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
   if (data.length === 0) {
     return (
@@ -89,13 +87,13 @@ function DetailChart({ data, title, category }: DetailChartProps) {
     );
   }
 
-  const fontSize = isSmall ? '10px' : isMobile ? '11px' : '12px';
-  const labelFontSize = isSmall ? '9px' : isMobile ? '10px' : '11px';
-  const xAxisHeight = isSmall ? 100 : isMobile ? 90 : 80;
+  const fontSize = '12px'; // 固定サイズに変更
+  const labelFontSize = '11px'; // 固定サイズに変更
+  const xAxisHeight = 80; // 固定値に変更
   const chartMargin = {
     top: 20,
-    right: isSmall ? 10 : isMobile ? 20 : 30,
-    left: isSmall ? 10 : 20,
+    right: 30, // 固定値に変更
+    left: 20, // 固定値に変更
     bottom: 20,
   };
 
@@ -111,7 +109,7 @@ function DetailChart({ data, title, category }: DetailChartProps) {
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={chartMargin}>
           <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
-          <XAxis dataKey="month" style={{ fontSize }} angle={isSmall ? -60 : -45} textAnchor="end" height={xAxisHeight} />
+          <XAxis dataKey="month" style={{ fontSize }} angle={-45} textAnchor="end" height={xAxisHeight} />
           <YAxis tickFormatter={value => `$${value.toFixed(0)}`} style={{ fontSize }} />
           <Tooltip content={<CustomTooltip category={category} />} cursor={{ fill: theme.palette.action.hover }} />
           <Bar

@@ -1,6 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { TooltipProps } from 'recharts';
-import { Box, Typography, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { CHART_COLORS } from '../../constants';
 import type { AggregatedData } from '../../types';
 
@@ -69,8 +69,6 @@ function CustomTooltip({ active, payload, label, displayUnit, category }: Custom
 
 function OverviewChart({ data, displayUnit, category }: OverviewChartProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
   if (data.length === 0) {
     return (
@@ -82,10 +80,10 @@ function OverviewChart({ data, displayUnit, category }: OverviewChartProps) {
     );
   }
 
-  const chartHeight = Math.max(400, data.length * (isMobile ? 30 : 25) + 100);
-  const yAxisWidth = isSmall ? 120 : isMobile ? 130 : 150;
-  const fontSize = isSmall ? '10px' : isMobile ? '11px' : '12px';
-  const labelFontSize = isSmall ? '9px' : isMobile ? '10px' : '11px';
+  const chartHeight = Math.max(400, data.length * 25 + 100);
+  const yAxisWidth = 150; // 固定幅に変更
+  const fontSize = '12px'; // 固定サイズに変更
+  const labelFontSize = '11px'; // 固定サイズに変更
 
   return (
     <Box

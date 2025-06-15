@@ -10,7 +10,15 @@ function Layout({ children }: LayoutProps) {
   const theme = useTheme();
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        minWidth: '1024px', // 最小幅を追加
+        overflowX: 'auto', // 横スクロールを有効化
+      }}
+    >
       {/* Header */}
       <AppBar position="static" elevation={0}>
         <Toolbar>
@@ -37,12 +45,13 @@ function Layout({ children }: LayoutProps) {
           py: 3,
         }}
       >
-        <Container 
+        <Container
           maxWidth={false}
           sx={{
             maxWidth: '1024px',
+            minWidth: '1024px', // 最小幅を追加
             margin: '0 auto',
-            px: { xs: 2, sm: 3 }
+            px: { xs: 2, sm: 3 },
           }}
         >
           {children}
@@ -60,12 +69,12 @@ function Layout({ children }: LayoutProps) {
           borderTop: `1px solid ${theme.palette.divider}`,
         }}
       >
-        <Container 
+        <Container
           maxWidth={false}
           sx={{
             maxWidth: '1024px',
             margin: '0 auto',
-            px: { xs: 2, sm: 3 }
+            px: { xs: 2, sm: 3 },
           }}
         >
           <Typography variant="body2" color="text.secondary" align="center">
