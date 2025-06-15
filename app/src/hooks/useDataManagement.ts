@@ -151,7 +151,9 @@ export const useSelectionOptions = (data: UserData[]) => {
 /**
  * 年間データからユーザー・リポジトリ選択肢を生成するフック
  */
-export const useYearlySelectionOptions = (yearlyData: Map<string, UserData[]>) => {
+export const useYearlySelectionOptions = (
+  yearlyData: Map<string, UserData[]>
+) => {
   const [users, setUsers] = useState<string[]>([]);
   const [repositories, setRepositories] = useState<string[]>([]);
 
@@ -401,7 +403,11 @@ export const useMonthlyTrendData = (
 
         // ユーザー詳細モードの場合、指定ユーザーでフィルタ
         if (viewMode === 'user-detail' && selectedUser) {
-          filteredData = DataAggregator.filterByName(data, selectedUser, 'user');
+          filteredData = DataAggregator.filterByName(
+            data,
+            selectedUser,
+            'user'
+          );
         }
         // リポジトリ詳細モードの場合、指定リポジトリでフィルタ
         else if (viewMode === 'repository-detail' && selectedRepository) {
@@ -420,7 +426,10 @@ export const useMonthlyTrendData = (
         for (const item of filteredData) {
           if (categoryConfig.fieldName === 'time' && item.time !== undefined) {
             totalUsage += item.time;
-          } else if (categoryConfig.fieldName === 'capacity' && item.capacity !== undefined) {
+          } else if (
+            categoryConfig.fieldName === 'capacity' &&
+            item.capacity !== undefined
+          ) {
             totalUsage += item.capacity;
           }
         }

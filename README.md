@@ -98,9 +98,10 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 - ✅ テスト実装 (OverviewChart: 5 件, DetailChart: 6 件, LoadingSpinner: 6 件)
 
 **カスタムツールチップ強化内容 (2025-06-15 完了):**
+
 - ✅ 使用量データ表示機能 (Actions/Codespaces: 時間・分, Storage: 容量・MB)
 - ✅ カテゴリ別表示切り替え (カテゴリごとの適切な単位表示)
-- ✅ コスト算出根拠の明示 (使用量→コスト変換の可視化)
+- ✅ コスト算出根拠の明示 (使用量 → コスト変換の可視化)
 - ✅ 無料枠との比較表示 (使用率・警告レベル表示)
 - ✅ Pull Request #4: [feat: Phase 3 カスタムツールチップ強化機能を実装](https://github.com/kocya-dev/data-viewer/pull/4)
 
@@ -476,5 +477,5 @@ npm run dev
 - 2025-06-15: プロジェクト開始、README.md 作成
 - 2025-06-15: Phase 1 完了 - 基盤構築（Vite + React + TypeScript 環境、Material-UI、テスト環境、基本レイアウト、Error Boundary）
 - 2025-06-15: Phase 2 完了 - データ処理（CSV 読み込み、カテゴリ別データ解釈、データ集計・変換、設定管理、状態管理、48 件のユニットテスト実装）
-- 2025-06-15: Phase 3 完了 - 可視化（Recharts実装、レスポンシブ対応、アクセシビリティ対応、17件のテスト追加）
-- 2025-06-15: Phase 3 カスタムツールチップ強化 完了（使用量データ表示、コスト算出根拠明示、無料枠比較表示、PR #4作成）
+- 2025-06-15: Phase 3 完了 - 可視化（Recharts 実装、レスポンシブ対応、アクセシビリティ対応、17 件のテスト追加）
+- 2025-06-15: Phase 3 カスタムツールチップ強化 完了（使用量データ表示、コスト算出根拠明示、無料枠比較表示、PR #4 作成）

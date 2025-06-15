@@ -55,17 +55,24 @@ function CustomTooltip({
         </Typography>
         {data.usage !== undefined && data.usageUnit && (
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            使用量: {data.usage.toLocaleString()}{data.usageUnit}
+            使用量: {data.usage.toLocaleString()}
+            {data.usageUnit}
           </Typography>
         )}
         {data.usage !== undefined && data.usageUnit && (
-          <Typography variant="caption" color="info.main" gutterBottom sx={{ fontStyle: 'italic' }}>
-            コスト算出: {data.usage.toLocaleString()}{data.usageUnit} → ${data.cost.toFixed(2)}
+          <Typography
+            variant="caption"
+            color="info.main"
+            gutterBottom
+            sx={{ fontStyle: 'italic' }}
+          >
+            コスト算出: {data.usage.toLocaleString()}
+            {data.usageUnit} → ${data.cost.toFixed(2)}
           </Typography>
         )}
         {data.freeQuotaUsage !== undefined && (
-          <Typography 
-            variant="body2" 
+          <Typography
+            variant="body2"
             color={data.freeQuotaUsage > 90 ? 'warning.main' : 'info.main'}
             gutterBottom
           >
@@ -73,7 +80,11 @@ function CustomTooltip({
           </Typography>
         )}
         {category && (
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ mt: 0.5, display: 'block' }}
+          >
             カテゴリ: {category}
           </Typography>
         )}
@@ -141,7 +152,9 @@ function OverviewChart({ data, displayUnit, category }: OverviewChartProps) {
             interval={0}
           />
           <Tooltip
-            content={<CustomTooltip displayUnit={displayUnit} category={category} />}
+            content={
+              <CustomTooltip displayUnit={displayUnit} category={category} />
+            }
             cursor={{ fill: theme.palette.action.hover }}
           />
           <Bar

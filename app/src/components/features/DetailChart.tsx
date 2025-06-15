@@ -30,7 +30,12 @@ interface CustomTooltipProps extends TooltipProps<number, string> {
   category?: string; // カテゴリ情報を追加
 }
 
-function CustomTooltip({ active, payload, label, category }: CustomTooltipProps) {
+function CustomTooltip({
+  active,
+  payload,
+  label,
+  category,
+}: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const data = payload[0].payload as MonthlyData;
     return (
@@ -53,17 +58,24 @@ function CustomTooltip({ active, payload, label, category }: CustomTooltipProps)
         </Typography>
         {data.usage !== undefined && data.usageUnit && (
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            使用量: {data.usage.toLocaleString()}{data.usageUnit}
+            使用量: {data.usage.toLocaleString()}
+            {data.usageUnit}
           </Typography>
         )}
         {data.usage !== undefined && data.usageUnit && (
-          <Typography variant="caption" color="info.main" gutterBottom sx={{ fontStyle: 'italic' }}>
-            コスト算出: {data.usage.toLocaleString()}{data.usageUnit} → ${data.cost.toFixed(2)}
+          <Typography
+            variant="caption"
+            color="info.main"
+            gutterBottom
+            sx={{ fontStyle: 'italic' }}
+          >
+            コスト算出: {data.usage.toLocaleString()}
+            {data.usageUnit} → ${data.cost.toFixed(2)}
           </Typography>
         )}
         {data.freeQuotaUsage !== undefined && (
-          <Typography 
-            variant="body2" 
+          <Typography
+            variant="body2"
             color={data.freeQuotaUsage > 90 ? 'warning.main' : 'info.main'}
             gutterBottom
           >
@@ -74,7 +86,11 @@ function CustomTooltip({ active, payload, label, category }: CustomTooltipProps)
           データ件数: {data.dataCount}件
         </Typography>
         {category && (
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ mt: 0.5, display: 'block' }}
+          >
             カテゴリ: {category}
           </Typography>
         )}
@@ -117,34 +133,32 @@ function DetailChart({ data, title, category }: DetailChartProps) {
   };
 
   return (
-    <Box 
+    <Box
       sx={{ width: '100%', height: 400 }}
       role="img"
       aria-labelledby="chart-title"
       aria-describedby="chart-description"
     >
-      <Typography 
+      <Typography
         id="chart-title"
-        variant="h6" 
+        variant="h6"
         gutterBottom
         role="heading"
         aria-level={3}
       >
         {title}
       </Typography>
-      <Typography 
+      <Typography
         id="chart-description"
         variant="body2"
         color="text.secondary"
         sx={{ mb: 2, sr: { position: 'absolute', left: '-10000px' } }}
       >
-        月別コスト推移を表示する棒グラフ。{data.length}ヶ月分のデータが含まれています。
+        月別コスト推移を表示する棒グラフ。{data.length}
+        ヶ月分のデータが含まれています。
       </Typography>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={data}
-          margin={chartMargin}
-        >
+        <BarChart data={data} margin={chartMargin}>
           <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
           <XAxis
             dataKey="month"
@@ -154,7 +168,7 @@ function DetailChart({ data, title, category }: DetailChartProps) {
             height={xAxisHeight}
           />
           <YAxis
-            tickFormatter={(value) => `$${value.toFixed(0)}`}
+            tickFormatter={value => `$${value.toFixed(0)}`}
             style={{ fontSize }}
           />
           <Tooltip
@@ -168,7 +182,10 @@ function DetailChart({ data, title, category }: DetailChartProps) {
             label={{
               position: 'top',
               formatter: (value: number) => `$${value.toFixed(2)}`,
-              style: { fontSize: labelFontSize, fill: theme.palette.text.secondary },
+              style: {
+                fontSize: labelFontSize,
+                fill: theme.palette.text.secondary,
+              },
             }}
           />
         </BarChart>

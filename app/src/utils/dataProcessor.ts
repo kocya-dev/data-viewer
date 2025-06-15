@@ -29,15 +29,18 @@ export class DataAggregator {
     for (const item of data) {
       const key = item[groupKey];
       const current = aggregationMap.get(key) || { cost: 0, usage: 0 };
-      
+
       // 使用量を集計（カテゴリに応じて）
       let itemUsage = 0;
       if (categoryConfig.fieldName === 'time' && item.time !== undefined) {
         itemUsage = item.time;
-      } else if (categoryConfig.fieldName === 'capacity' && item.capacity !== undefined) {
+      } else if (
+        categoryConfig.fieldName === 'capacity' &&
+        item.capacity !== undefined
+      ) {
         itemUsage = item.capacity;
       }
-      
+
       aggregationMap.set(key, {
         cost: current.cost + item.cost,
         usage: current.usage + itemUsage,
@@ -246,17 +249,17 @@ export class DataAggregator {
     targetName: string,
     unit: DisplayUnit,
     categoryConfig: CategoryConfig
-  ): Array<{ 
-    month: string; 
-    cost: number; 
+  ): Array<{
+    month: string;
+    cost: number;
     dataCount: number;
     usage?: number;
     usageUnit?: string;
     freeQuotaUsage?: number;
   }> {
-    const result: Array<{ 
-      month: string; 
-      cost: number; 
+    const result: Array<{
+      month: string;
+      cost: number;
       dataCount: number;
       usage?: number;
       usageUnit?: string;
@@ -266,13 +269,16 @@ export class DataAggregator {
     for (const [monthKey, data] of monthlyData) {
       const filteredData = this.filterByName(data, targetName, unit);
       const totalCost = this.calculateTotalCost(filteredData);
-      
+
       // 使用量を集計
       let totalUsage = 0;
       for (const item of filteredData) {
         if (categoryConfig.fieldName === 'time' && item.time !== undefined) {
           totalUsage += item.time;
-        } else if (categoryConfig.fieldName === 'capacity' && item.capacity !== undefined) {
+        } else if (
+          categoryConfig.fieldName === 'capacity' &&
+          item.capacity !== undefined
+        ) {
           totalUsage += item.capacity;
         }
       }
