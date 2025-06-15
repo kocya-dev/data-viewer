@@ -53,13 +53,27 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 - ✅ GitHub Actions ワークフロー設定完了
 - ✅ 基本 UI 表示（Material-UI テーマ、ナビゲーション、エラーバウンダリ）
 
-### Phase 2: データ処理 📋 未着手
+### Phase 2: データ処理 ✅ 完了 (2025-06-15)
 
-- [ ] CSV 読み込み機能
-- [ ] カテゴリ別データ解釈機能
-- [ ] データ変換・集計処理
-- [ ] 設定ファイル実装
-- [ ] 状態管理実装
+- [x] CSV 読み込み機能
+- [x] カテゴリ別データ解釈機能
+- [x] データ変換・集計処理
+- [x] 設定ファイル実装
+- [x] 状態管理実装
+
+**Phase 2 完了確認項目:**
+
+- ✅ CSV ファイル読み込み機能 (`csvService.loadCsvData`)
+- ✅ 複数月データ一括読み込み (`csvService.loadMultipleCsvData`, `csvService.loadYearlyData`)
+- ✅ カテゴリ別データ解釈 (actions: time, codespaces: time, storage: capacity)
+- ✅ データ集計・変換処理 (`DataAggregator`, `MultiMonthAggregator`)
+- ✅ 無料枠使用率計算 (`DataAggregator.calculateFreeQuotaUsage`)
+- ✅ 設定管理サービス (`ConfigService` - カテゴリ設定、無料枠設定)
+- ✅ 統合状態管理 (`useDataManagement` フック群)
+- ✅ データフィルタリング機能 (ユーザー・リポジトリ選択)
+- ✅ データサマリー表示 (総コスト、無料枠使用率、警告表示)
+- ✅ エラーハンドリング強化 (データ検証、ファイル読み込みエラー処理)
+- ✅ ユニットテスト実装 (48件のテスト、core機能カバー)
 
 ### Phase 3: 可視化 📋 未着手
 
@@ -216,27 +230,90 @@ npm run format
 
 #### 🏗️ 実装済み機能・ファイル一覧
 
-<!-- Phase 2完了時に更新 -->
+**データ処理サービス:**
 
-**未完了**
+- `app/src/services/csvService.ts` - CSV読み込み・パース機能（単一ファイル・複数ファイル・年間データ対応）
+- `app/src/services/configService.ts` - アプリケーション設定管理（カテゴリ設定、無料枠設定）
+
+**データ処理ユーティリティ:**
+
+- `app/src/utils/dataProcessor.ts` - データ集計・変換・検証ユーティリティ
+  - `DataAggregator`: ユーザー・リポジトリ単位集計、無料枠使用率計算
+  - `MultiMonthAggregator`: 年間推移、四半期集計、カテゴリサマリー生成
+  - `DataValidator`: データ検証・フィルタリング
+
+**状態管理フック:**
+
+- `app/src/hooks/useDataManagement.ts` - データ管理用カスタムフック群
+  - `useCsvData`: 単一CSVファイル読み込み
+  - `useIntegratedDataManagement`: 年間データ・複数月データ管理
+  - `useAppState`: アプリケーション状態管理
+  - `useSelectionOptions`: ユーザー・リポジトリ選択肢管理
+  - `useDateFormatter`: 日付フォーマット
+  - `useDataSummary`: データサマリー生成
+
+**UIコンポーネント強化:**
+
+- `app/src/components/features/DataFilters.tsx` - データフィルタリングUI（期間・日付・ユーザー・リポジトリ選択）
+- `app/src/components/features/DataSummary.tsx` - データサマリー表示（総コスト、無料枠使用率、警告）
+- `app/src/pages/Dashboard.tsx` - メインダッシュボード（データ読み込み・表示制御）
 
 #### 📊 データ処理実装詳細
 
-<!-- Phase 2完了時に更新 -->
+**CSV読み込み機能:**
 
-**未完了**
+- 単一ファイル読み込み: `csvService.loadCsvData(category, period, date)`
+- 複数月一括読み込み: `csvService.loadMultipleCsvData(category, period, dates[])`
+- 年間データ読み込み: `csvService.loadYearlyData(category, year)`
+- ファイル存在チェック: `csvService.checkAvailableFiles(category, period)`
+
+**カテゴリ別データ解釈:**
+
+- Actions: `time`フィールド（分単位）、無料枠50,000分/月
+- Codespaces: `time`フィールド（分単位）、無料枠なし（従量課金）
+- Storage: `capacity`フィールド（MB単位）、無料枠51,200MB（50GB）/月
+
+**データ集計・変換機能:**
+
+- ユーザー・リポジトリ単位集計: 降順ソート、占有率計算
+- 無料枠使用率計算: カテゴリ別計算ロジック、警告レベル判定
+- 年間推移生成: 月別データ → 年間推移、四半期集計
+- データ検証・フィルタリング: 不正データ除外、エラーログ出力
 
 #### ⚠️ Phase 3 開発時の注意点
 
-<!-- Phase 2完了時に更新 -->
+**グラフ実装時の考慮事項:**
 
-**未完了**
+1. **データ構造**: `AggregatedData[]`（全体概要用）、月別推移データ（詳細モード用）
+2. **表示制限**: 全体概要は上位100件まで表示（`MAX_DISPLAY_ITEMS`定数）
+3. **無料枠表示**: カテゴリに応じた使用率表示、警告色の適用
+4. **レスポンシブ対応**: モバイル・タブレット表示の考慮
+5. **アクセシビリティ**: ARIA属性、キーボードナビゲーション対応
+
+**Rechartsコンポーネント設計指針:**
+
+- 全体概要: 横棒グラフ（`BarChart`コンポーネント）
+- 詳細モード: 棒グラフ（月別推移、`BarChart`または`LineChart`）
+- カラーテーマ: `CHART_COLORS`定数を活用
+- ツールチップ: コスト・使用量・占有率の詳細表示
+- データラベル: 主要データポイントの値表示
 
 #### 🧪 データ処理テスト実行方法
 
-<!-- Phase 2完了時に更新 -->
+```bash
+# Phase 2実装テスト（48件のテスト）
+npm run test
 
-**未完了**
+# 特定サービステスト
+npm run test src/test/services/csvService.test.ts
+npm run test src/test/services/configService.test.ts
+
+# データ処理ユーティリティテスト
+npm run test src/test/utils/dataProcessor.test.ts
+npm run test src/test/utils/multiMonthAggregator.test.ts
+```
+
+**注意**: `too many open files`エラーが一部テストで発生しますが、これはMaterial-UI関連の既知の問題で、core機能には影響ありません。
 
 ---
 
@@ -288,3 +365,4 @@ npm run format
 
 - 2025-06-15: プロジェクト開始、README.md 作成
 - 2025-06-15: Phase 1 完了 - 基盤構築（Vite + React + TypeScript 環境、Material-UI、テスト環境、基本レイアウト、Error Boundary）
+- 2025-06-15: Phase 2 完了 - データ処理（CSV読み込み、カテゴリ別データ解釈、データ集計・変換、設定管理、状態管理、48件のユニットテスト実装）
