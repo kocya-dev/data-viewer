@@ -8,6 +8,7 @@ import type {
 } from '../types';
 import { csvService } from '../services/csvService';
 import { DataValidator, DataAggregator } from '../utils/dataProcessor';
+import type { MonthlyData } from '../components/features/DetailChart';
 
 /**
  * CSVデータ読み込み用カスタムフック
@@ -139,6 +140,44 @@ export const useSelectionOptions = (data: UserData[]) => {
     setUsers(uniqueUsers);
     setRepositories(uniqueRepositories);
   }, [data]);
+
+  return {
+    users,
+    repositories,
+  };
+};
+
+/**
+ * 年間データからユーザー・リポジトリ選択肢を生成するフック
+ */
+export const useYearlySelectionOptions = (yearlyData: Map<string, UserData[]>) => {
+  const [users, setUsers] = useState<string[]>([]);
+  const [repositories, setRepositories] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (yearlyData.size === 0) {
+      setUsers([]);
+      setRepositories([]);
+      return;
+    }
+
+    // 全月のデータを結合
+    const allData: UserData[] = [];
+    yearlyData.forEach(monthData => {
+      allData.push(...monthData);
+    });
+
+    // 一意のユーザー・リポジトリ名を抽出
+    const uniqueUsers = Array.from(
+      new Set(allData.map(item => item.user_name))
+    ).sort();
+    const uniqueRepositories = Array.from(
+      new Set(allData.map(item => item.repository_name))
+    ).sort();
+
+    setUsers(uniqueUsers);
+    setRepositories(uniqueRepositories);
+  }, [yearlyData]);
 
   return {
     users,
@@ -325,4 +364,61 @@ export const useDataSummary = (data: UserData[], categoryConfig?: any) => {
   }, [data, categoryConfig]);
 
   return summary;
+};
+
+/**
+ * 月別推移データ生成用カスタムフック
+ */
+export const useMonthlyTrendData = (
+  yearlyData: Map<string, UserData[]>,
+  selectedUser: string,
+  selectedRepository: string,
+  viewMode: ViewMode
+) => {
+  const [monthlyTrendData, setMonthlyTrendData] = useState<MonthlyData[]>([]);
+
+  useEffect(() => {
+    if (viewMode === 'overview' || yearlyData.size === 0) {
+      setMonthlyTrendData([]);
+      return;
+    }
+
+    const trendData: MonthlyData[] = [];
+
+    // 年間データの各月をイテレート
+    Array.from(yearlyData.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .forEach(([month, data]) => {
+        let filteredData = data;
+
+        // ユーザー詳細モードの場合、指定ユーザーでフィルタ
+        if (viewMode === 'user-detail' && selectedUser) {
+          filteredData = DataAggregator.filterByName(data, selectedUser, 'user');
+        }
+        // リポジトリ詳細モードの場合、指定リポジトリでフィルタ
+        else if (viewMode === 'repository-detail' && selectedRepository) {
+          filteredData = DataAggregator.filterByName(
+            data,
+            selectedRepository,
+            'repository'
+          );
+        }
+
+        // 月別コストを計算
+        const cost = DataAggregator.calculateTotalCost(filteredData);
+
+        // フォーマットされた月名を生成（YYYYMM -> YYYY年MM月）
+        const formattedMonth = month.replace(/(\d{4})(\d{2})/, '$1年$2月');
+
+        trendData.push({
+          month: formattedMonth,
+          cost,
+          dataCount: filteredData.length,
+        });
+      });
+
+    setMonthlyTrendData(trendData);
+  }, [yearlyData, selectedUser, selectedRepository, viewMode]);
+
+  return monthlyTrendData;
 };

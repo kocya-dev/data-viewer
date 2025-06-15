@@ -27,6 +27,7 @@ interface DataFiltersProps {
   period: Period;
   displayUnit: DisplayUnit;
   selectedDate: Date | null;
+  selectedYear?: number;
   selectedUser: string;
   selectedRepository: string;
   users: string[];
@@ -34,6 +35,7 @@ interface DataFiltersProps {
   onPeriodChange: (period: Period) => void;
   onDisplayUnitChange: (unit: DisplayUnit) => void;
   onDateChange: (date: Date | null) => void;
+  onYearChange?: (year: number) => void;
   onUserChange: (user: string) => void;
   onRepositoryChange: (repository: string) => void;
 }
@@ -43,6 +45,7 @@ export function DataFilters({
   period,
   displayUnit,
   selectedDate,
+  selectedYear,
   selectedUser,
   selectedRepository,
   users,
@@ -50,6 +53,7 @@ export function DataFilters({
   onPeriodChange,
   onDisplayUnitChange,
   onDateChange,
+  onYearChange,
   onUserChange,
   onRepositoryChange,
 }: DataFiltersProps) {
@@ -65,36 +69,61 @@ export function DataFilters({
           spacing={3}
           flexWrap="wrap"
         >
-          {/* 日付選択 */}
-          <Box sx={{ minWidth: 200 }}>
-            <LocalizationProvider
-              dateAdapter={AdapterDateFns}
-              adapterLocale={ja}
-            >
-              <DatePicker
-                label={
-                  period === 'weekly'
-                    ? '週の開始日'
-                    : period === 'monthly'
-                      ? '月を選択'
-                      : '四半期を選択'
-                }
-                value={selectedDate}
-                onChange={onDateChange}
-                views={
-                  period === 'weekly'
-                    ? ['year', 'month', 'day']
-                    : ['year', 'month']
-                }
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    size: 'small',
-                  },
-                }}
-              />
-            </LocalizationProvider>
-          </Box>
+          {/* 日付選択（全体概要モードのみ） */}
+          {viewMode === 'overview' && (
+            <Box sx={{ minWidth: 200 }}>
+              <LocalizationProvider
+                dateAdapter={AdapterDateFns}
+                adapterLocale={ja}
+              >
+                <DatePicker
+                  label={
+                    period === 'weekly'
+                      ? '週の開始日'
+                      : period === 'monthly'
+                        ? '月を選択'
+                        : '四半期を選択'
+                  }
+                  value={selectedDate}
+                  onChange={onDateChange}
+                  views={
+                    period === 'weekly'
+                      ? ['year', 'month', 'day']
+                      : ['year', 'month']
+                  }
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      size: 'small',
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            </Box>
+          )}
+
+          {/* 年選択（詳細モードのみ） */}
+          {viewMode !== 'overview' && (
+            <Box sx={{ minWidth: 150 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel>年</InputLabel>
+                <Select
+                  value={selectedYear || new Date().getFullYear()}
+                  label="年"
+                  onChange={e => onYearChange && onYearChange(Number(e.target.value))}
+                >
+                  {Array.from({ length: 5 }, (_, i) => {
+                    const year = new Date().getFullYear() - i;
+                    return (
+                      <MenuItem key={year} value={year}>
+                        {year}年
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Box>
+          )}
 
           {/* 期間選択（全体概要モードのみ） */}
           {viewMode === 'overview' && (

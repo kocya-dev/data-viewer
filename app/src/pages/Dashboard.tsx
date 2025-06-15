@@ -1,22 +1,27 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
   Card,
   CardContent,
   Alert,
-  CircularProgress,
   Stack,
 } from '@mui/material';
 import { CategoryTabs } from '../components/features/CategoryTabs';
 import { ViewModeTabs } from '../components/features/ViewModeTabs';
 import { DataFilters } from '../components/features/DataFilters';
 import { DataSummary } from '../components/features/DataSummary';
+import { OverviewChart } from '../components/features/OverviewChart';
+import { DetailChart } from '../components/features/DetailChart';
+import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import {
   useAppState,
   useCsvData,
+  useIntegratedDataManagement,
   useSelectionOptions,
+  useYearlySelectionOptions,
   useDateFormatter,
+  useMonthlyTrendData,
 } from '../hooks/useDataManagement';
 import { DataAggregator } from '../utils/dataProcessor';
 import { configService } from '../services/configService';
@@ -39,46 +44,90 @@ function Dashboard() {
     setSelectedRepository,
   } = useAppState();
 
+  // 年間データ用の年選択状態
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+
+  // 単一日付データ用（全体概要モード）
   const { data, loading, error, loadData, clearData } = useCsvData();
-  const { users, repositories } = useSelectionOptions(data);
+  
+  // 年間データ用（詳細モード）
+  const {
+    yearlyData,
+    loading: yearlyLoading,
+    error: yearlyError,
+    loadYearlyData,
+    clearData: clearYearlyData,
+  } = useIntegratedDataManagement();
+
+  // 選択肢の管理（モードに応じて切り替え）
+  const { users: overviewUsers, repositories: overviewRepositories } = useSelectionOptions(data);
+  const { users: yearlyUsers, repositories: yearlyRepositories } = useYearlySelectionOptions(yearlyData);
+  
+  const users = viewMode === 'overview' ? overviewUsers : yearlyUsers;
+  const repositories = viewMode === 'overview' ? overviewRepositories : yearlyRepositories;
   const { formatDateForFile } = useDateFormatter();
 
-  // カテゴリまたは期間、日付が変更された時にデータを再読み込み
+  // 月別推移データ
+  const monthlyTrendData = useMonthlyTrendData(
+    yearlyData,
+    selectedUser,
+    selectedRepository,
+    viewMode
+  );
+
+  // 全体概要モード用のデータ読み込み
   useEffect(() => {
-    if (selectedDate) {
+    if (viewMode === 'overview' && selectedDate) {
       const dateString = formatDateForFile(selectedDate, period);
       if (dateString) {
         loadData(category, period, dateString);
       }
-    } else {
+    } else if (viewMode === 'overview') {
       clearData();
     }
-  }, [category, period, selectedDate, loadData, clearData, formatDateForFile]);
+  }, [viewMode, category, period, selectedDate, loadData, clearData, formatDateForFile]);
+
+  // 詳細モード用の年間データ読み込み
+  useEffect(() => {
+    if (viewMode !== 'overview') {
+      loadYearlyData(category, selectedYear);
+    } else {
+      clearYearlyData();
+    }
+  }, [viewMode, category, selectedYear, loadYearlyData, clearYearlyData]);
 
   // カテゴリ設定を取得
   const categoryConfig = configService.getCategoryConfig(category);
 
-  // データを集計（表示モードに応じて）
-  const aggregatedData =
-    data.length > 0 ? DataAggregator.aggregateByUnit(data, displayUnit) : [];
-  const totalCost = DataAggregator.calculateTotalCost(data);
-  const freeQuotaUsage = categoryConfig
-    ? DataAggregator.calculateFreeQuotaUsage(data, categoryConfig)
-    : null;
+  // 現在のローディング状態とエラー状態
+  const currentLoading = viewMode === 'overview' ? loading : yearlyLoading;
+  const currentError = viewMode === 'overview' ? error : yearlyError;
 
-  // 詳細モード用のフィルタリングされたデータ
-  const filteredData = (() => {
+  // 全体概要モード用のデータ集計
+  const aggregatedData =
+    viewMode === 'overview' && data.length > 0
+      ? DataAggregator.aggregateByUnit(data, displayUnit)
+      : [];
+
+  // 全体概要モード用のサマリー
+  const totalCost = viewMode === 'overview' ? DataAggregator.calculateTotalCost(data) : 0;
+  const freeQuotaUsage =
+    viewMode === 'overview' && categoryConfig
+      ? DataAggregator.calculateFreeQuotaUsage(data, categoryConfig)
+      : null;
+
+  // 詳細モード用のデータ存在チェック
+  const hasDetailData = viewMode !== 'overview' && yearlyData.size > 0;
+
+  // 詳細モード用のタイトル生成
+  const getDetailTitle = () => {
     if (viewMode === 'user-detail' && selectedUser) {
-      return DataAggregator.filterByName(data, selectedUser, 'user');
+      return `ユーザー「${selectedUser}」の月別推移 (${selectedYear}年)`;
     } else if (viewMode === 'repository-detail' && selectedRepository) {
-      return DataAggregator.filterByName(
-        data,
-        selectedRepository,
-        'repository'
-      );
+      return `リポジトリ「${selectedRepository}」の月別推移 (${selectedYear}年)`;
     }
-    return data;
-  })();
+    return '月別推移';
+  };
 
   return (
     <Box>
@@ -101,32 +150,25 @@ function Dashboard() {
           selectedDate={selectedDate}
           selectedUser={selectedUser}
           selectedRepository={selectedRepository}
+          selectedYear={selectedYear}
           users={users}
           repositories={repositories}
           onPeriodChange={setPeriod}
           onDisplayUnitChange={setDisplayUnit}
           onDateChange={setSelectedDate}
+          onYearChange={setSelectedYear}
           onUserChange={setSelectedUser}
           onRepositoryChange={setSelectedRepository}
         />
 
-        {error && <Alert severity="error">{error}</Alert>}
+        {currentError && <Alert severity="error">{currentError}</Alert>}
 
-        {loading && (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            py={4}
-          >
-            <CircularProgress />
-            <Typography variant="body1" sx={{ ml: 2 }}>
-              データを読み込み中...
-            </Typography>
-          </Box>
+        {currentLoading && (
+          <LoadingSpinner message="データを読み込み中..." />
         )}
 
-        {!loading && !error && data.length > 0 && (
+        {/* 全体概要モード */}
+        {viewMode === 'overview' && !loading && !error && data.length > 0 && (
           <>
             <DataSummary
               totalCost={totalCost}
@@ -138,52 +180,60 @@ function Dashboard() {
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  {viewMode === 'overview' && '全体概要'}
-                  {viewMode === 'user-detail' && 'ユーザー詳細'}
-                  {viewMode === 'repository-detail' && 'リポジトリ詳細'}
+                  全体概要
                 </Typography>
-
-                {viewMode === 'overview' && (
-                  <Typography color="text.secondary">
-                    {displayUnit === 'user' ? 'ユーザー' : 'リポジトリ'}
-                    単位の集計データ: {aggregatedData.length}件
-                    <br />
-                    上位の課金データが表示されます。
-                  </Typography>
-                )}
-
-                {viewMode === 'user-detail' && selectedUser && (
-                  <Typography color="text.secondary">
-                    ユーザー「{selectedUser}」の詳細データ:{' '}
-                    {filteredData.length}件
-                  </Typography>
-                )}
-
-                {viewMode === 'repository-detail' && selectedRepository && (
-                  <Typography color="text.secondary">
-                    リポジトリ「{selectedRepository}」の詳細データ:{' '}
-                    {filteredData.length}件
-                  </Typography>
-                )}
-
-                {/* Phase 3でグラフコンポーネントを実装予定 */}
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 2 }}
-                >
-                  Phase 3でRechartsを使用したグラフ表示機能を実装予定です。
+                <Typography color="text.secondary" gutterBottom>
+                  {displayUnit === 'user' ? 'ユーザー' : 'リポジトリ'}
+                  単位の集計データ: {aggregatedData.length}件
                 </Typography>
+                
+                <OverviewChart data={aggregatedData} displayUnit={displayUnit} />
               </CardContent>
             </Card>
           </>
         )}
 
-        {!loading && !error && data.length === 0 && selectedDate && (
-          <Alert severity="info">
-            指定された条件のデータが見つかりませんでした。
-            日付やカテゴリを変更してお試しください。
-          </Alert>
+        {/* 詳細モード */}
+        {viewMode !== 'overview' && !yearlyLoading && !yearlyError && hasDetailData && (
+          <Card>
+            <CardContent>
+              <DetailChart
+                data={monthlyTrendData}
+                title={getDetailTitle()}
+              />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* データなしの場合の表示 */}
+        {!currentLoading && !currentError && (
+          <>
+            {viewMode === 'overview' && data.length === 0 && selectedDate && (
+              <Alert severity="info">
+                指定された条件のデータが見つかりませんでした。
+                日付やカテゴリを変更してお試しください。
+              </Alert>
+            )}
+
+            {viewMode !== 'overview' && !hasDetailData && (
+              <Alert severity="info">
+                指定された年のデータが見つかりませんでした。
+                年やカテゴリを変更してお試しください。
+              </Alert>
+            )}
+
+            {viewMode === 'user-detail' && hasDetailData && !selectedUser && (
+              <Alert severity="info">
+                ユーザーを選択してください。
+              </Alert>
+            )}
+
+            {viewMode === 'repository-detail' && hasDetailData && !selectedRepository && (
+              <Alert severity="info">
+                リポジトリを選択してください。
+              </Alert>
+            )}
+          </>
         )}
       </Stack>
     </Box>
