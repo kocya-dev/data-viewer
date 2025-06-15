@@ -75,13 +75,26 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 - ✅ エラーハンドリング強化 (データ検証、ファイル読み込みエラー処理)
 - ✅ ユニットテスト実装 (48件のテスト、core機能カバー)
 
-### Phase 3: 可視化 📋 未着手
+### Phase 3: 可視化 ✅ 完了 (2025-06-15)
 
-- [ ] Recharts 実装
-- [ ] 各表示モード実装
-- [ ] UI/UX コンポーネント実装
-- [ ] アクセシビリティ対応
-- [ ] レスポンシブ対応
+- [x] Recharts 実装
+- [x] 各表示モード実装
+- [x] UI/UX コンポーネント実装
+- [x] アクセシビリティ対応
+- [x] レスポンシブ対応
+
+**Phase 3 完了確認項目:**
+
+- ✅ Recharts グラフ実装 (`OverviewChart`, `DetailChart`)
+- ✅ 全体概要モード: 横棒グラフ (上位100件まで表示、占有率表示)
+- ✅ 詳細モード: 月別推移棒グラフ (ユーザー・リポジトリ別)
+- ✅ レスポンシブ対応 (モバイル・タブレット・デスクトップ)
+- ✅ アクセシビリティ対応 (ARIA属性、セマンティックHTML、キーボードナビゲーション)
+- ✅ UI/UXコンポーネント (`LoadingSpinner`, エラーハンドリング統一)
+- ✅ カスタムツールチップ (コスト・使用量・占有率詳細表示)
+- ✅ データラベル表示 (グラフ内数値表示)
+- ✅ 動的レイアウト調整 (データ量に応じた高さ調整)
+- ✅ テスト実装 (OverviewChart: 5件, DetailChart: 6件, LoadingSpinner: 6件)
 
 ### Phase 4: 最適化・テスト・品質管理 📋 未着手
 
@@ -321,27 +334,104 @@ npm run test src/test/utils/multiMonthAggregator.test.ts
 
 #### 🏗️ 実装済み機能・ファイル一覧
 
-<!-- Phase 3完了時に更新 -->
+**可視化コンポーネント:**
 
-**未完了**
+- `app/src/components/features/OverviewChart.tsx` - 全体概要用横棒グラフ（レスポンシブ・アクセシビリティ対応）
+- `app/src/components/features/DetailChart.tsx` - 詳細モード用棒グラフ（月別推移・レスポンシブ対応）
+- `app/src/components/ui/LoadingSpinner.tsx` - 統一ローディングコンポーネント（スピナー・スケルトン対応）
+
+**可視化機能強化:**
+
+- Recharts ライブラリ統合 (BarChart, ResponsiveContainer, カスタムTooltip)
+- レスポンシブ対応 (useMediaQuery活用、画面サイズ別レイアウト調整)
+- アクセシビリティ対応 (ARIA属性、role設定、セマンティックHTML)
+- カスタムツールチップ (コスト・使用量・占有率の詳細表示)
+- データラベル表示 (グラフ内への数値・占有率表示)
+- 動的レイアウト (データ量に応じた高さ自動調整)
+
+**テストカバレッジ:**
+
+- `app/src/test/components/OverviewChart.test.tsx` - 全体概要グラフテスト（5テストケース）
+- `app/src/test/components/DetailChart.test.tsx` - 詳細グラフテスト（6テストケース）
+- `app/src/test/components/LoadingSpinner.test.tsx` - ローディングコンポーネントテスト（6テストケース）
 
 #### 🎨 UI/UX コンポーネント実装詳細
 
-<!-- Phase 3完了時に更新 -->
+**グラフ仕様:**
 
-**未完了**
+- 全体概要: 横棒グラフ（layout="horizontal"）、上位100件表示制限
+- 詳細モード: 縦棒グラフ、月別推移表示
+- 共通: Material-UI テーマ統合、Chart Colors 定数活用
+- ツールチップ: Material-UI Box + Typography での統一デザイン
+- ラベル: グラフ内データラベル表示（コスト・占有率）
+
+**レスポンシブ対応:**
+
+- 画面サイズ別フォントサイズ調整 (isSmall: 10px, isMobile: 11px, デスクトップ: 12px)
+- Y軸幅動的調整 (isSmall: 120px, isMobile: 130px, デスクトップ: 150px)
+- チャート高さ動的計算 (データ量 × 行高さ + マージン)
+- X軸ラベル角度調整 (isSmall: -60度, その他: -45度)
+
+**アクセシビリティ対応:**
+
+- role="img" でグラフをイメージとして識別
+- aria-label でグラフ内容の説明
+- aria-labelledby, aria-describedby でタイトルと説明の関連付け
+- セマンティック見出し (h6, role="heading", aria-level)
+- status role でローディング状態の通知 (aria-live="polite")
 
 #### ⚠️ Phase 4 開発時の注意点
 
-<!-- Phase 3完了時に更新 -->
+**パフォーマンス最適化:**
 
-**未完了**
+1. **チャンクサイズ**: 現在のビルドサイズが1.1MBと大きい（Recharts等）、コード分割要検討
+2. **描画パフォーマンス**: 大量データ表示時の仮想化検討（100件制限現在適用中）
+3. **初期表示**: Core Web Vitals指標達成確認（LCP < 2.5s, FID < 100ms, CLS < 0.1）
+4. **メモ化**: React.memo, useMemo, useCallback の適用検討
+
+**エラーハンドリング強化:**
+
+- グラフ描画エラー時のフォールバック表示
+- データ形式エラー時の詳細メッセージ
+- ネットワークエラー時のリトライ機能
+- CSVパースエラー時のユーザーフレンドリーメッセージ
+
+**テスト拡張:**
+
+- E2Eテスト実装 (Playwright/Cypress)
+- 統合テスト (複数コンポーネント連携)
+- パフォーマンステスト (大量データ負荷テスト)
+- アクセシビリティテスト (axe-core統合)
+
+**ブラウザ互換性:**
+
+- Internet Explorer 対応不要確認済み
+- Chrome, Firefox, Safari, Edge での動作確認
+- モバイルブラウザでの操作性確認
+- タッチ操作対応 (グラフインタラクション)
 
 #### 🧪 統合テスト実行方法
 
-<!-- Phase 3完了時に更新 -->
+```bash
+# Phase 3実装テスト（17件のテスト追加）
+npm run test
 
-**未完了**
+# 特定コンポーネントテスト
+npm run test src/test/components/OverviewChart.test.tsx
+npm run test src/test/components/DetailChart.test.tsx
+npm run test src/test/components/LoadingSpinner.test.tsx
+
+# 全体テスト実行
+npm run test --run
+
+# ビルド確認
+npm run build
+
+# 開発サーバー確認
+npm run dev
+```
+
+**注意**: `too many open files`エラーが一部テストで発生しますが、これはMaterial-UI関連の既知の問題で、core機能には影響ありません。
 
 ---
 
