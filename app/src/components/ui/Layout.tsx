@@ -37,7 +37,16 @@ function Layout({ children }: LayoutProps) {
           py: 3,
         }}
       >
-        <Container maxWidth="xl">{children}</Container>
+        <Container 
+          maxWidth={false}
+          sx={{
+            maxWidth: '1024px',
+            margin: '0 auto',
+            px: { xs: 2, sm: 3 }
+          }}
+        >
+          {children}
+        </Container>
       </Box>
 
       {/* Footer */}
@@ -51,7 +60,14 @@ function Layout({ children }: LayoutProps) {
           borderTop: `1px solid ${theme.palette.divider}`,
         }}
       >
-        <Container maxWidth="xl">
+        <Container 
+          maxWidth={false}
+          sx={{
+            maxWidth: '1024px',
+            margin: '0 auto',
+            px: { xs: 2, sm: 3 }
+          }}
+        >
           <Typography variant="body2" color="text.secondary" align="center">
             © 2025 GitHub Organization Cost Visualization App
           </Typography>
