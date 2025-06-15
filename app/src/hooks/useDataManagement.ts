@@ -8,6 +8,7 @@ import type {
 } from '../types';
 import { csvService } from '../services/csvService';
 import { DataValidator, DataAggregator } from '../utils/dataProcessor';
+import { configService } from '../services/configService';
 import type { MonthlyData } from '../components/features/DetailChart';
 
 /**
@@ -367,18 +368,25 @@ export const useDataSummary = (data: UserData[], categoryConfig?: any) => {
 };
 
 /**
- * 月別推移データ生成用カスタムフック
+ * 月別推移データ生成用カスタムフック（使用量情報付き）
  */
 export const useMonthlyTrendData = (
   yearlyData: Map<string, UserData[]>,
   selectedUser: string,
   selectedRepository: string,
-  viewMode: ViewMode
+  viewMode: ViewMode,
+  category: Category
 ) => {
   const [monthlyTrendData, setMonthlyTrendData] = useState<MonthlyData[]>([]);
 
   useEffect(() => {
     if (viewMode === 'overview' || yearlyData.size === 0) {
+      setMonthlyTrendData([]);
+      return;
+    }
+
+    const categoryConfig = configService.getCategoryConfig(category);
+    if (!categoryConfig) {
       setMonthlyTrendData([]);
       return;
     }
@@ -407,6 +415,22 @@ export const useMonthlyTrendData = (
         // 月別コストを計算
         const cost = DataAggregator.calculateTotalCost(filteredData);
 
+        // 使用量を集計
+        let totalUsage = 0;
+        for (const item of filteredData) {
+          if (categoryConfig.fieldName === 'time' && item.time !== undefined) {
+            totalUsage += item.time;
+          } else if (categoryConfig.fieldName === 'capacity' && item.capacity !== undefined) {
+            totalUsage += item.capacity;
+          }
+        }
+
+        // 無料枠使用率を計算
+        let freeQuotaUsage: number | undefined;
+        if (categoryConfig.freeQuota && categoryConfig.freeQuota.limit > 0) {
+          freeQuotaUsage = (totalUsage / categoryConfig.freeQuota.limit) * 100;
+        }
+
         // フォーマットされた月名を生成（YYYYMM -> YYYY年MM月）
         const formattedMonth = month.replace(/(\d{4})(\d{2})/, '$1年$2月');
 
@@ -414,11 +438,14 @@ export const useMonthlyTrendData = (
           month: formattedMonth,
           cost,
           dataCount: filteredData.length,
+          usage: totalUsage,
+          usageUnit: categoryConfig.unit,
+          freeQuotaUsage,
         });
       });
 
     setMonthlyTrendData(trendData);
-  }, [yearlyData, selectedUser, selectedRepository, viewMode]);
+  }, [yearlyData, selectedUser, selectedRepository, viewMode, category]);
 
   return monthlyTrendData;
 };

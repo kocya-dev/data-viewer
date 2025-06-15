@@ -72,7 +72,8 @@ function Dashboard() {
     yearlyData,
     selectedUser,
     selectedRepository,
-    viewMode
+    viewMode,
+    category
   );
 
   // 全体概要モード用のデータ読み込み
@@ -103,10 +104,10 @@ function Dashboard() {
   const currentLoading = viewMode === 'overview' ? loading : yearlyLoading;
   const currentError = viewMode === 'overview' ? error : yearlyError;
 
-  // 全体概要モード用のデータ集計
+  // 全体概要モード用のデータ集計（使用量情報付き）
   const aggregatedData =
-    viewMode === 'overview' && data.length > 0
-      ? DataAggregator.aggregateByUnit(data, displayUnit)
+    viewMode === 'overview' && data.length > 0 && categoryConfig
+      ? DataAggregator.aggregateByUnitWithUsage(data, displayUnit, categoryConfig)
       : [];
 
   // 全体概要モード用のサマリー
@@ -187,7 +188,11 @@ function Dashboard() {
                   単位の集計データ: {aggregatedData.length}件
                 </Typography>
                 
-                <OverviewChart data={aggregatedData} displayUnit={displayUnit} />
+                <OverviewChart 
+                  data={aggregatedData} 
+                  displayUnit={displayUnit} 
+                  category={categoryConfig?.label || category}
+                />
               </CardContent>
             </Card>
           </>
@@ -200,6 +205,7 @@ function Dashboard() {
               <DetailChart
                 data={monthlyTrendData}
                 title={getDetailTitle()}
+                category={categoryConfig?.label || category}
               />
             </CardContent>
           </Card>
