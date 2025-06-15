@@ -73,7 +73,7 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 - ✅ データフィルタリング機能 (ユーザー・リポジトリ選択)
 - ✅ データサマリー表示 (総コスト、無料枠使用率、警告表示)
 - ✅ エラーハンドリング強化 (データ検証、ファイル読み込みエラー処理)
-- ✅ ユニットテスト実装 (48件のテスト、core機能カバー)
+- ✅ ユニットテスト実装 (48 件のテスト、core 機能カバー)
 
 ### Phase 3: 可視化 ✅ 完了 (2025-06-15)
 
@@ -86,15 +86,15 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 **Phase 3 完了確認項目:**
 
 - ✅ Recharts グラフ実装 (`OverviewChart`, `DetailChart`)
-- ✅ 全体概要モード: 横棒グラフ (上位100件まで表示、占有率表示)
+- ✅ 全体概要モード: 横棒グラフ (上位 100 件まで表示、占有率表示)
 - ✅ 詳細モード: 月別推移棒グラフ (ユーザー・リポジトリ別)
 - ✅ レスポンシブ対応 (モバイル・タブレット・デスクトップ)
-- ✅ アクセシビリティ対応 (ARIA属性、セマンティックHTML、キーボードナビゲーション)
-- ✅ UI/UXコンポーネント (`LoadingSpinner`, エラーハンドリング統一)
+- ✅ アクセシビリティ対応 (ARIA 属性、セマンティック HTML、キーボードナビゲーション)
+- ✅ UI/UX コンポーネント (`LoadingSpinner`, エラーハンドリング統一)
 - ✅ カスタムツールチップ (コスト・使用量・占有率詳細表示)
 - ✅ データラベル表示 (グラフ内数値表示)
 - ✅ 動的レイアウト調整 (データ量に応じた高さ調整)
-- ✅ テスト実装 (OverviewChart: 5件, DetailChart: 6件, LoadingSpinner: 6件)
+- ✅ テスト実装 (OverviewChart: 5 件, DetailChart: 6 件, LoadingSpinner: 6 件)
 
 ### Phase 4: 最適化・テスト・品質管理 📋 未着手
 
@@ -245,7 +245,7 @@ npm run format
 
 **データ処理サービス:**
 
-- `app/src/services/csvService.ts` - CSV読み込み・パース機能（単一ファイル・複数ファイル・年間データ対応）
+- `app/src/services/csvService.ts` - CSV 読み込み・パース機能（単一ファイル・複数ファイル・年間データ対応）
 - `app/src/services/configService.ts` - アプリケーション設定管理（カテゴリ設定、無料枠設定）
 
 **データ処理ユーティリティ:**
@@ -258,22 +258,22 @@ npm run format
 **状態管理フック:**
 
 - `app/src/hooks/useDataManagement.ts` - データ管理用カスタムフック群
-  - `useCsvData`: 単一CSVファイル読み込み
+  - `useCsvData`: 単一 CSV ファイル読み込み
   - `useIntegratedDataManagement`: 年間データ・複数月データ管理
   - `useAppState`: アプリケーション状態管理
   - `useSelectionOptions`: ユーザー・リポジトリ選択肢管理
   - `useDateFormatter`: 日付フォーマット
   - `useDataSummary`: データサマリー生成
 
-**UIコンポーネント強化:**
+**UI コンポーネント強化:**
 
-- `app/src/components/features/DataFilters.tsx` - データフィルタリングUI（期間・日付・ユーザー・リポジトリ選択）
+- `app/src/components/features/DataFilters.tsx` - データフィルタリング UI（期間・日付・ユーザー・リポジトリ選択）
 - `app/src/components/features/DataSummary.tsx` - データサマリー表示（総コスト、無料枠使用率、警告）
 - `app/src/pages/Dashboard.tsx` - メインダッシュボード（データ読み込み・表示制御）
 
 #### 📊 データ処理実装詳細
 
-**CSV読み込み機能:**
+**CSV 読み込み機能:**
 
 - 単一ファイル読み込み: `csvService.loadCsvData(category, period, date)`
 - 複数月一括読み込み: `csvService.loadMultipleCsvData(category, period, dates[])`
@@ -282,9 +282,9 @@ npm run format
 
 **カテゴリ別データ解釈:**
 
-- Actions: `time`フィールド（分単位）、無料枠50,000分/月
+- Actions: `time`フィールド（分単位）、無料枠 50,000 分/月
 - Codespaces: `time`フィールド（分単位）、無料枠なし（従量課金）
-- Storage: `capacity`フィールド（MB単位）、無料枠51,200MB（50GB）/月
+- Storage: `capacity`フィールド（MB 単位）、無料枠 51,200MB（50GB）/月
 
 **データ集計・変換機能:**
 
@@ -298,12 +298,12 @@ npm run format
 **グラフ実装時の考慮事項:**
 
 1. **データ構造**: `AggregatedData[]`（全体概要用）、月別推移データ（詳細モード用）
-2. **表示制限**: 全体概要は上位100件まで表示（`MAX_DISPLAY_ITEMS`定数）
+2. **表示制限**: 全体概要は上位 100 件まで表示（`MAX_DISPLAY_ITEMS`定数）
 3. **無料枠表示**: カテゴリに応じた使用率表示、警告色の適用
 4. **レスポンシブ対応**: モバイル・タブレット表示の考慮
-5. **アクセシビリティ**: ARIA属性、キーボードナビゲーション対応
+5. **アクセシビリティ**: ARIA 属性、キーボードナビゲーション対応
 
-**Rechartsコンポーネント設計指針:**
+**Recharts コンポーネント設計指針:**
 
 - 全体概要: 横棒グラフ（`BarChart`コンポーネント）
 - 詳細モード: 棒グラフ（月別推移、`BarChart`または`LineChart`）
@@ -326,7 +326,7 @@ npm run test src/test/utils/dataProcessor.test.ts
 npm run test src/test/utils/multiMonthAggregator.test.ts
 ```
 
-**注意**: `too many open files`エラーが一部テストで発生しますが、これはMaterial-UI関連の既知の問題で、core機能には影響ありません。
+**注意**: `too many open files`エラーが一部テストで発生しますが、これは Material-UI 関連の既知の問題で、core 機能には影響ありません。
 
 ---
 
@@ -342,24 +342,24 @@ npm run test src/test/utils/multiMonthAggregator.test.ts
 
 **可視化機能強化:**
 
-- Recharts ライブラリ統合 (BarChart, ResponsiveContainer, カスタムTooltip)
-- レスポンシブ対応 (useMediaQuery活用、画面サイズ別レイアウト調整)
-- アクセシビリティ対応 (ARIA属性、role設定、セマンティックHTML)
+- Recharts ライブラリ統合 (BarChart, ResponsiveContainer, カスタム Tooltip)
+- レスポンシブ対応 (useMediaQuery 活用、画面サイズ別レイアウト調整)
+- アクセシビリティ対応 (ARIA 属性、role 設定、セマンティック HTML)
 - カスタムツールチップ (コスト・使用量・占有率の詳細表示)
 - データラベル表示 (グラフ内への数値・占有率表示)
 - 動的レイアウト (データ量に応じた高さ自動調整)
 
 **テストカバレッジ:**
 
-- `app/src/test/components/OverviewChart.test.tsx` - 全体概要グラフテスト（5テストケース）
-- `app/src/test/components/DetailChart.test.tsx` - 詳細グラフテスト（6テストケース）
-- `app/src/test/components/LoadingSpinner.test.tsx` - ローディングコンポーネントテスト（6テストケース）
+- `app/src/test/components/OverviewChart.test.tsx` - 全体概要グラフテスト（5 テストケース）
+- `app/src/test/components/DetailChart.test.tsx` - 詳細グラフテスト（6 テストケース）
+- `app/src/test/components/LoadingSpinner.test.tsx` - ローディングコンポーネントテスト（6 テストケース）
 
 #### 🎨 UI/UX コンポーネント実装詳細
 
 **グラフ仕様:**
 
-- 全体概要: 横棒グラフ（layout="horizontal"）、上位100件表示制限
+- 全体概要: 横棒グラフ（layout="vertical"）、上位 100 件表示制限
 - 詳細モード: 縦棒グラフ、月別推移表示
 - 共通: Material-UI テーマ統合、Chart Colors 定数活用
 - ツールチップ: Material-UI Box + Typography での統一デザイン
@@ -368,9 +368,9 @@ npm run test src/test/utils/multiMonthAggregator.test.ts
 **レスポンシブ対応:**
 
 - 画面サイズ別フォントサイズ調整 (isSmall: 10px, isMobile: 11px, デスクトップ: 12px)
-- Y軸幅動的調整 (isSmall: 120px, isMobile: 130px, デスクトップ: 150px)
+- Y 軸幅動的調整 (isSmall: 120px, isMobile: 130px, デスクトップ: 150px)
 - チャート高さ動的計算 (データ量 × 行高さ + マージン)
-- X軸ラベル角度調整 (isSmall: -60度, その他: -45度)
+- X 軸ラベル角度調整 (isSmall: -60 度, その他: -45 度)
 
 **アクセシビリティ対応:**
 
@@ -384,9 +384,9 @@ npm run test src/test/utils/multiMonthAggregator.test.ts
 
 **パフォーマンス最適化:**
 
-1. **チャンクサイズ**: 現在のビルドサイズが1.1MBと大きい（Recharts等）、コード分割要検討
-2. **描画パフォーマンス**: 大量データ表示時の仮想化検討（100件制限現在適用中）
-3. **初期表示**: Core Web Vitals指標達成確認（LCP < 2.5s, FID < 100ms, CLS < 0.1）
+1. **チャンクサイズ**: 現在のビルドサイズが 1.1MB と大きい（Recharts 等）、コード分割要検討
+2. **描画パフォーマンス**: 大量データ表示時の仮想化検討（100 件制限現在適用中）
+3. **初期表示**: Core Web Vitals 指標達成確認（LCP < 2.5s, FID < 100ms, CLS < 0.1）
 4. **メモ化**: React.memo, useMemo, useCallback の適用検討
 
 **エラーハンドリング強化:**
@@ -394,14 +394,14 @@ npm run test src/test/utils/multiMonthAggregator.test.ts
 - グラフ描画エラー時のフォールバック表示
 - データ形式エラー時の詳細メッセージ
 - ネットワークエラー時のリトライ機能
-- CSVパースエラー時のユーザーフレンドリーメッセージ
+- CSV パースエラー時のユーザーフレンドリーメッセージ
 
 **テスト拡張:**
 
-- E2Eテスト実装 (Playwright/Cypress)
+- E2E テスト実装 (Playwright/Cypress)
 - 統合テスト (複数コンポーネント連携)
 - パフォーマンステスト (大量データ負荷テスト)
-- アクセシビリティテスト (axe-core統合)
+- アクセシビリティテスト (axe-core 統合)
 
 **ブラウザ互換性:**
 
@@ -431,7 +431,7 @@ npm run build
 npm run dev
 ```
 
-**注意**: `too many open files`エラーが一部テストで発生しますが、これはMaterial-UI関連の既知の問題で、core機能には影響ありません。
+**注意**: `too many open files`エラーが一部テストで発生しますが、これは Material-UI 関連の既知の問題で、core 機能には影響ありません。
 
 ---
 
@@ -455,4 +455,4 @@ npm run dev
 
 - 2025-06-15: プロジェクト開始、README.md 作成
 - 2025-06-15: Phase 1 完了 - 基盤構築（Vite + React + TypeScript 環境、Material-UI、テスト環境、基本レイアウト、Error Boundary）
-- 2025-06-15: Phase 2 完了 - データ処理（CSV読み込み、カテゴリ別データ解釈、データ集計・変換、設定管理、状態管理、48件のユニットテスト実装）
+- 2025-06-15: Phase 2 完了 - データ処理（CSV 読み込み、カテゴリ別データ解釈、データ集計・変換、設定管理、状態管理、48 件のユニットテスト実装）
