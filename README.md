@@ -346,7 +346,7 @@ npm run test src/test/utils/multiMonthAggregator.test.ts
 - レスポンシブ対応 (useMediaQuery 活用、画面サイズ別レイアウト調整)
 - アクセシビリティ対応 (ARIA 属性、role 設定、セマンティック HTML)
 - カスタムツールチップ (コスト・使用量・占有率の詳細表示)
-- データラベル表示 (グラフ内への数値・占有率表示)
+- データラベル表示 (グラフ内への数値表示)
 - 動的レイアウト (データ量に応じた高さ自動調整)
 
 **テストカバレッジ:**
@@ -363,7 +363,7 @@ npm run test src/test/utils/multiMonthAggregator.test.ts
 - 詳細モード: 縦棒グラフ、月別推移表示
 - 共通: Material-UI テーマ統合、Chart Colors 定数活用
 - ツールチップ: Material-UI Box + Typography での統一デザイン
-- ラベル: グラフ内データラベル表示（コスト・占有率）
+- ラベル: グラフ内データラベル表示（コスト）
 
 **レスポンシブ対応:**
 

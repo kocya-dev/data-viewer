@@ -123,7 +123,7 @@ function OverviewChart({ data, displayUnit }: OverviewChartProps) {
             label={{
               position: 'right',
               formatter: (value: number, entry: AggregatedData) =>
-                `$${value.toFixed(2)} (${entry ? entry.percentage.toFixed(1) : '--'}%)`,
+                `$${value.toFixed(2)} ${entry ? `(${entry.percentage.toFixed(1)}%)` : ''}`,
               style: {
                 fontSize: labelFontSize,
                 fill: theme.palette.text.secondary,
