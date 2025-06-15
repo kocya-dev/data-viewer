@@ -21,7 +21,12 @@ interface CustomTooltipProps extends TooltipProps<number, string> {
   displayUnit: 'user' | 'repository';
 }
 
-function CustomTooltip({ active, payload, label, displayUnit }: CustomTooltipProps) {
+function CustomTooltip({
+  active,
+  payload,
+  label,
+  displayUnit,
+}: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const data = payload[0].payload as AggregatedData;
     return (
@@ -78,7 +83,7 @@ function OverviewChart({ data, displayUnit }: OverviewChartProps) {
   const labelFontSize = isSmall ? '9px' : isMobile ? '10px' : '11px';
 
   return (
-    <Box 
+    <Box
       sx={{ width: '100%', height: chartHeight }}
       role="img"
       aria-label={`${displayUnit === 'user' ? 'ユーザー' : 'リポジトリ'}別のコスト分析グラフ。${data.length}件のデータを表示しています。`}
@@ -86,7 +91,7 @@ function OverviewChart({ data, displayUnit }: OverviewChartProps) {
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          layout="horizontal"
+          layout="vertical"
           margin={{
             top: 20,
             right: 30,
@@ -97,7 +102,7 @@ function OverviewChart({ data, displayUnit }: OverviewChartProps) {
           <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
           <XAxis
             type="number"
-            tickFormatter={(value) => `$${value.toFixed(0)}`}
+            tickFormatter={value => `$${value.toFixed(0)}`}
             style={{ fontSize }}
           />
           <YAxis
@@ -118,8 +123,11 @@ function OverviewChart({ data, displayUnit }: OverviewChartProps) {
             label={{
               position: 'right',
               formatter: (value: number, entry: AggregatedData) =>
-                `$${value.toFixed(2)} (${entry.percentage.toFixed(1)}%)`,
-              style: { fontSize: labelFontSize, fill: theme.palette.text.secondary },
+                `$${value.toFixed(2)} (${entry ? entry.percentage.toFixed(1) : '--'}%)`,
+              style: {
+                fontSize: labelFontSize,
+                fill: theme.palette.text.secondary,
+              },
             }}
           />
         </BarChart>
