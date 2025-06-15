@@ -1,0 +1,12 @@
+user_name,repository_name,time,cost
+john_doe,my-repo,35,4.95
+jane_smith,web-app,32,4.40
+mike_wilson,backend-api,44,6.60
+tom_garcia,devops-tools,38,5.25
+lisa_taylor,security-audit,28,3.85
+ryan_lee,machine-learning,46,6.90
+nina_clark,documentation,20,2.75
+david_white,testing-framework,40,5.80
+kelly_martin,ci-cd-pipeline,33,4.65
+mike_wilson,ci-cd-pipeline,19,2.70
+david_white,security-audit,16,2.25

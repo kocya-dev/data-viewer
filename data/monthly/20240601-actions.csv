@@ -1,0 +1,9 @@
+user_name,repository_name,time,cost
+john_doe,my-repo,32,4.80
+jane_smith,web-app,28,3.90
+mike_wilson,backend-api,45,6.75
+alex_brown,mobile-app,40,5.80
+emma_davis,data-analytics,35,4.95
+tom_garcia,devops-tools,15,1.95
+jane_smith,backend-api,18,2.50
+alex_brown,devops-tools,12,1.65

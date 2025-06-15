@@ -1,0 +1,12 @@
+user_name,repository_name,time,cost
+john_doe,my-repo,38,5.40
+jane_smith,web-app,35,4.95
+mike_wilson,backend-api,48,7.20
+tom_garcia,devops-tools,40,5.80
+ryan_lee,machine-learning,45,6.50
+david_white,testing-framework,42,6.15
+steven_king,performance-monitoring,36,5.10
+amanda_hill,ui-components,33,4.65
+chris_adams,database-optimization,41,5.95
+amanda_hill,database-optimization,22,3.15
+steven_king,ui-components,18,2.55

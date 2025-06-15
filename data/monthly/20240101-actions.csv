@@ -1,0 +1,7 @@
+user_name,repository_name,time,cost
+john_doe,my-repo,8,0.75
+jane_smith,web-app,5,0.30
+mike_wilson,backend-api,12,1.20
+sarah_jones,frontend-ui,6,0.45
+john_doe,backend-api,4,0.35
+jane_smith,my-repo,3,0.25
