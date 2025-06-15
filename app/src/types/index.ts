@@ -10,6 +10,9 @@ export interface AggregatedData {
   name: string; // ユーザー名またはリポジトリ名
   cost: number;
   percentage: number;
+  usage?: number; // 使用量（時間・容量）
+  usageUnit?: string; // 使用量単位
+  freeQuotaUsage?: number; // 無料枠使用率（%）
 }
 
 export type Category = 'actions' | 'codespaces' | 'storage';

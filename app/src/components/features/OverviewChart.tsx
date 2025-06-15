@@ -15,10 +15,12 @@ import type { AggregatedData } from '../../types';
 interface OverviewChartProps {
   data: AggregatedData[];
   displayUnit: 'user' | 'repository';
+  category?: string; // カテゴリ情報を追加
 }
 
 interface CustomTooltipProps extends TooltipProps<number, string> {
   displayUnit: 'user' | 'repository';
+  category?: string; // カテゴリ情報を追加
 }
 
 function CustomTooltip({
@@ -26,6 +28,7 @@ function CustomTooltip({
   payload,
   label,
   displayUnit,
+  category,
 }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const data = payload[0].payload as AggregatedData;
@@ -38,24 +41,60 @@ function CustomTooltip({
           borderRadius: 1,
           p: 1.5,
           boxShadow: 2,
+          minWidth: 200,
         }}
       >
         <Typography variant="subtitle2" gutterBottom>
           {displayUnit === 'user' ? 'ユーザー' : 'リポジトリ'}: {label}
         </Typography>
-        <Typography variant="body2" color="primary">
+        <Typography variant="body2" color="primary" gutterBottom>
           コスト: ${data.cost.toFixed(2)}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" gutterBottom>
           占有率: {data.percentage.toFixed(1)}%
         </Typography>
+        {data.usage !== undefined && data.usageUnit && (
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            使用量: {data.usage.toLocaleString()}
+            {data.usageUnit}
+          </Typography>
+        )}
+        {data.usage !== undefined && data.usageUnit && (
+          <Typography
+            variant="caption"
+            color="info.main"
+            gutterBottom
+            sx={{ fontStyle: 'italic' }}
+          >
+            コスト算出: {data.usage.toLocaleString()}
+            {data.usageUnit} → ${data.cost.toFixed(2)}
+          </Typography>
+        )}
+        {data.freeQuotaUsage !== undefined && (
+          <Typography
+            variant="body2"
+            color={data.freeQuotaUsage > 90 ? 'warning.main' : 'info.main'}
+            gutterBottom
+          >
+            無料枠使用率: {data.freeQuotaUsage.toFixed(1)}%
+          </Typography>
+        )}
+        {category && (
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ mt: 0.5, display: 'block' }}
+          >
+            カテゴリ: {category}
+          </Typography>
+        )}
       </Box>
     );
   }
   return null;
 }
 
-function OverviewChart({ data, displayUnit }: OverviewChartProps) {
+function OverviewChart({ data, displayUnit, category }: OverviewChartProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
@@ -113,7 +152,9 @@ function OverviewChart({ data, displayUnit }: OverviewChartProps) {
             interval={0}
           />
           <Tooltip
-            content={<CustomTooltip displayUnit={displayUnit} />}
+            content={
+              <CustomTooltip displayUnit={displayUnit} category={category} />
+            }
             cursor={{ fill: theme.palette.action.hover }}
           />
           <Bar

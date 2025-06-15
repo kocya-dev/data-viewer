@@ -11,6 +11,72 @@ import type {
  */
 export class DataAggregator {
   /**
+   * ユーザー単位またはリポジトリ単位でデータを集計（使用量・無料枠含む）
+   * @param data UserDataの配列
+   * @param unit 集計単位（user または repository）
+   * @param categoryConfig カテゴリ設定
+   * @returns 集計されたデータの配列（降順ソート済み、使用量・無料枠情報含む）
+   */
+  static aggregateByUnitWithUsage(
+    data: UserData[],
+    unit: DisplayUnit,
+    categoryConfig: CategoryConfig
+  ): AggregatedData[] {
+    const groupKey = unit === 'user' ? 'user_name' : 'repository_name';
+    const aggregationMap = new Map<string, { cost: number; usage: number }>();
+
+    // データを集計
+    for (const item of data) {
+      const key = item[groupKey];
+      const current = aggregationMap.get(key) || { cost: 0, usage: 0 };
+
+      // 使用量を集計（カテゴリに応じて）
+      let itemUsage = 0;
+      if (categoryConfig.fieldName === 'time' && item.time !== undefined) {
+        itemUsage = item.time;
+      } else if (
+        categoryConfig.fieldName === 'capacity' &&
+        item.capacity !== undefined
+      ) {
+        itemUsage = item.capacity;
+      }
+
+      aggregationMap.set(key, {
+        cost: current.cost + item.cost,
+        usage: current.usage + itemUsage,
+      });
+    }
+
+    // 全体のコスト計算
+    const totalCost = Array.from(aggregationMap.values()).reduce(
+      (sum, entry) => sum + entry.cost,
+      0
+    );
+
+    // AggregatedDataの配列に変換し、降順ソート
+    const result: AggregatedData[] = Array.from(aggregationMap.entries())
+      .map(([name, entry]) => {
+        // 無料枠使用率を計算（個別の使用量に対して）
+        let freeQuotaUsage: number | undefined;
+        if (categoryConfig.freeQuota && categoryConfig.freeQuota.limit > 0) {
+          freeQuotaUsage = (entry.usage / categoryConfig.freeQuota.limit) * 100;
+        }
+
+        return {
+          name,
+          cost: entry.cost,
+          percentage: totalCost > 0 ? (entry.cost / totalCost) * 100 : 0,
+          usage: entry.usage,
+          usageUnit: categoryConfig.unit,
+          freeQuotaUsage,
+        };
+      })
+      .sort((a, b) => b.cost - a.cost);
+
+    return result;
+  }
+
+  /**
    * ユーザー単位またはリポジトリ単位でデータを集計
    * @param data UserDataの配列
    * @param unit 集計単位（user または repository）
@@ -163,6 +229,73 @@ export class DataAggregator {
       result.push({
         month: monthKey,
         cost: totalCost,
+      });
+    }
+
+    // 月順でソート
+    return result.sort((a, b) => a.month.localeCompare(b.month));
+  }
+
+  /**
+   * 月別データを年間表示用に変換（使用量情報付き）
+   * @param monthlyData 月ごとのデータマップ（キー：YYYY-MM、値：UserData[]）
+   * @param targetName 対象のユーザー名またはリポジトリ名
+   * @param unit フィルタリング単位
+   * @param categoryConfig カテゴリ設定
+   * @returns 月別データの配列（使用量・無料枠情報含む）
+   */
+  static convertToMonthlyTrendWithUsage(
+    monthlyData: Map<string, UserData[]>,
+    targetName: string,
+    unit: DisplayUnit,
+    categoryConfig: CategoryConfig
+  ): Array<{
+    month: string;
+    cost: number;
+    dataCount: number;
+    usage?: number;
+    usageUnit?: string;
+    freeQuotaUsage?: number;
+  }> {
+    const result: Array<{
+      month: string;
+      cost: number;
+      dataCount: number;
+      usage?: number;
+      usageUnit?: string;
+      freeQuotaUsage?: number;
+    }> = [];
+
+    for (const [monthKey, data] of monthlyData) {
+      const filteredData = this.filterByName(data, targetName, unit);
+      const totalCost = this.calculateTotalCost(filteredData);
+
+      // 使用量を集計
+      let totalUsage = 0;
+      for (const item of filteredData) {
+        if (categoryConfig.fieldName === 'time' && item.time !== undefined) {
+          totalUsage += item.time;
+        } else if (
+          categoryConfig.fieldName === 'capacity' &&
+          item.capacity !== undefined
+        ) {
+          totalUsage += item.capacity;
+        }
+      }
+
+      // 無料枠使用率を計算
+      let freeQuotaUsage: number | undefined;
+      if (categoryConfig.freeQuota && categoryConfig.freeQuota.limit > 0) {
+        freeQuotaUsage = (totalUsage / categoryConfig.freeQuota.limit) * 100;
+      }
+
+      result.push({
+        month: monthKey,
+        cost: totalCost,
+        dataCount: filteredData.length,
+        usage: totalUsage,
+        usageUnit: categoryConfig.unit,
+        freeQuotaUsage,
       });
     }
 
