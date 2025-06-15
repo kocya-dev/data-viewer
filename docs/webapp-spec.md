@@ -302,6 +302,23 @@ Main Content (各タブ内)
 - **グラフ種類**:
   - 全体概要: 横棒グラフ（上位 100 位まで表示）
   - 詳細モード: 棒グラフ（月別推移）
+- **ツールチップ仕様**:
+  - 統一デザイン: Material-UI Box + Typography
+  - 全体概要モード表示項目:
+    - ユーザー名/リポジトリ名
+    - コスト（USD、小数点第 2 位まで）
+    - 占有率（%、小数点第 1 位まで）
+    - **使用量（時間・容量）**: カテゴリ別詳細
+      - Actions/Codespaces: 実行時間（分単位）
+      - Storage: 使用容量（MB 単位）
+    - **コスト算出根拠**: 使用量からコスト計算の明確化
+  - 詳細モード表示項目:
+    - 対象月
+    - 月別コスト（USD、小数点第 2 位まで）
+    - データ件数
+    - **月別使用量**: カテゴリ別集計値
+      - Actions/Codespaces: 月間総実行時間（分）
+      - Storage: 月間総使用容量（MB）
 
 ## 6. データ処理仕様
 
@@ -322,6 +339,11 @@ Main Content (各タブ内)
 - ユーザー別・リポジトリ別集計
 - 占有率計算
 - 無料枠使用率計算
+- **使用量データ集計**:
+  - カテゴリ別使用量の合計値計算（time/capacity）
+  - ツールチップ表示用のデータ構造拡張
+  - 集計単位別使用量データ（ユーザー単位・リポジトリ単位）
+  - 月別使用量推移データ（詳細モード用）
 
 ### 6.3 無料枠管理
 
@@ -376,6 +398,11 @@ Main Content (各タブ内)
 - UI/UX コンポーネント実装
 - アクセシビリティ対応
 - レスポンシブ対応
+- **カスタムツールチップ強化**:
+  - 使用量データ表示機能（時間・容量）
+  - カテゴリ別表示切り替え
+  - コスト算出根拠の明示
+  - 無料枠との比較表示
 
 ### Phase 4: 最適化・テスト・品質管理
 
@@ -388,3 +415,61 @@ Main Content (各タブ内)
 ## 8. 開発・運用計画
 
 本仕様書に基づいて、以下の開発計画で進行します。各章で定義された要件を満たすよう、段階的に実装を進めていきます。
+
+## 9. データ型定義
+
+### 9.1 基本データ型
+
+**UserData インターフェース**:
+
+```typescript
+interface UserData {
+  user_name: string;
+  repository_name: string;
+  time?: number; // Actions, Codespaces用（分単位）
+  capacity?: number; // Storage用（MB単位）
+  cost: number; // USD
+}
+```
+
+**AggregatedData インターフェース（ツールチップ強化版）**:
+
+```typescript
+interface AggregatedData {
+  name: string; // ユーザー名またはリポジトリ名
+  cost: number; // 集計コスト（USD）
+  percentage: number; // 占有率（%）
+  totalUsage?: number; // 集計使用量（time/capacity）
+  usageUnit?: string; // 使用量単位（"分" または "MB"）
+}
+```
+
+**MonthlyData インターフェース（詳細モード用）**:
+
+```typescript
+interface MonthlyData {
+  month: string; // フォーマット済み月名（例：2024年1月）
+  cost: number; // 月別コスト（USD）
+  dataCount: number; // データ件数
+  totalUsage?: number; // 月別総使用量
+  usageUnit?: string; // 使用量単位
+}
+```
+
+### 9.2 ツールチップ表示データ
+
+**OverviewTooltipData**:
+
+- name: 名前（ユーザー/リポジトリ）
+- cost: コスト（USD、小数点第 2 位まで）
+- percentage: 占有率（%、小数点第 1 位まで）
+- usage: 使用量（カテゴリ別）
+- usageUnit: 使用量単位
+
+**DetailTooltipData**:
+
+- month: 対象月
+- cost: 月別コスト（USD）
+- dataCount: データ件数
+- totalUsage: 月別総使用量
+- usageUnit: 使用量単位

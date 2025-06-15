@@ -363,6 +363,10 @@ npm run test src/test/utils/multiMonthAggregator.test.ts
 - 詳細モード: 縦棒グラフ、月別推移表示
 - 共通: Material-UI テーマ統合、Chart Colors 定数活用
 - ツールチップ: Material-UI Box + Typography での統一デザイン
+  - コスト表示（USD）
+  - 占有率表示（%）
+  - **時間・使用容量表示**: カテゴリ別使用量詳細（Actions/Codespaces: 時間（分）、Storage: 容量（MB））
+  - **コスト算出元情報**: 使用量からコスト計算の根拠を明確化
 - ラベル: グラフ内データラベル表示（コスト）
 
 **レスポンシブ対応:**
@@ -388,6 +392,14 @@ npm run test src/test/utils/multiMonthAggregator.test.ts
 2. **描画パフォーマンス**: 大量データ表示時の仮想化検討（100 件制限現在適用中）
 3. **初期表示**: Core Web Vitals 指標達成確認（LCP < 2.5s, FID < 100ms, CLS < 0.1）
 4. **メモ化**: React.memo, useMemo, useCallback の適用検討
+
+**ツールチップ強化:**
+
+- カテゴリ別データ表示: Actions/Codespaces は時間（分）、Storage は容量（MB）
+- 無料枠との比較表示: 使用量と無料枠の関係性を明確化
+- 単位の統一表記: 時間は「分」、容量は「MB」で統一
+- データ未存在時のフォールバック表示
+- **コスト算出根拠の表示**: 時間・容量データからコスト計算の根拠を明示
 
 **エラーハンドリング強化:**
 
