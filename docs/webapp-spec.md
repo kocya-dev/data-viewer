@@ -14,42 +14,15 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 
 ## 2. 技術スタック
 
-### 2.### 4.4 ### 4.5 拡張性
-
-- \*### 4.6 コード品質・開発プロセス
-
-- TypeScript strict mode による厳格な型チェック
-- Prettier による自動フォーマット、ESLint による静的解析
-- Vitest による単体テスト、React Testing Library による UI テスト
-- pre-commit hooks による品質管理
-- Error Boundary によるエラーハンドリング
-- アクセシビリティ対応
-- 詳細なコーディング規約は `.github/instructions/app-code.instructions.md` を参照
-
-### 4.7 デプロイメント: 新規課金カテゴリの追加に柔軟に対応
-
-- CSV データ形式の第 3 フィールドの動的解釈
-- UI 要素（タブ、フィルター）の動的生成
-- 無料枠設定の外部設定化
-- **データスキーマ変更**: カテゴリごとの異なるデータ構造に対応
-- **設定ファイル**: カテゴリ定義・無料枠設定の外部設定化
-
-### 4.6 コード品質・開発プロセスブラウザ対応（Chrome, Firefox, Safari, Edge）
-
-### 4.5 拡張性術
-
-| 項目             | 技術        |
-| ---------------- | ----------- |
-| ビルドツール     | Vite        |
-| フレームワーク   | React       |
-| UI ライブラリ    | Material-UI |
-| グラフライブラリ | Recharts    |
-| 言語             | TypeScript  |
-
-### 2.2 開発ツール・品質管理
+### 2.1 開発ツール・品質管理
 
 | 項目                   | 技術・設定                                               |
 | ---------------------- | -------------------------------------------------------- |
+| ビルドツール           | Vite                                                     |
+| フレームワーク         | React                                                    |
+| UI ライブラリ          | Material-UI                                              |
+| グラフライブラリ       | Recharts                                                 |
+| 言語                   | TypeScript                                               |
 | コードフォーマット     | Prettier                                                 |
 | コード静的解析         | ESLint                                                   |
 | 型安全性               | TypeScript strict mode                                   |
@@ -58,7 +31,7 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 | パフォーマンス指標     | Core Web Vitals（LCP < 2.5s, FID < 100ms, CLS < 0.1）    |
 | アクセシビリティ       | ARIA 属性、セマンティック HTML、キーボードナビゲーション |
 
-### 2.3 開発方針
+### 2.2 開発方針
 
 - TypeScript strict mode による型安全性の確保
 - 関数コンポーネントと React Hooks の使用
@@ -67,7 +40,7 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 - アクセシビリティ対応（ARIA 属性、キーボードナビゲーション）
 - 詳細なコーディング規約は `.github/instructions/app-code.instructions.md` を参照
 
-### 2.4 ディレクトリ構造
+### 2.3 ディレクトリ構造
 
 #### プロジェクト全体
 
@@ -403,53 +376,9 @@ Main Content (各タブ内)
 - 無料枠 90%超過時: 黄色警告
 - 無料枠 100%超過時: 赤色警告
 
-## 7. 開発計画
+## 7. データ型定義
 
-### Phase 1: 基盤構築
-
-- Vite + React + TypeScript 環境構築
-- 開発ツール設定（ESLint、Prettier、pre-commit hooks）
-- Material-UI セットアップ
-- テスト環境構築（Vitest、React Testing Library）
-- 基本レイアウト作成
-- Error Boundary 実装
-
-### Phase 2: データ処理
-
-- CSV 読み込み機能
-- カテゴリ別データ解釈機能
-- データ変換・集計処理
-- 設定ファイル実装
-- 状態管理実装
-
-### Phase 3: 可視化
-
-- Recharts 実装
-- 各表示モード実装
-- UI/UX コンポーネント実装
-- アクセシビリティ対応
-- レスポンシブ対応
-- **カスタムツールチップ強化**:
-  - 使用量データ表示機能（時間・容量）
-  - カテゴリ別表示切り替え
-  - コスト算出根拠の明示
-  - 無料枠との比較表示
-
-### Phase 4: 最適化・テスト・品質管理
-
-- パフォーマンス最適化
-- エラーハンドリング強化
-- テスト実装（カバレッジ 80%以上）
-- コード品質チェック
-- 最終検証（ブラウザ互換性、アクセシビリティ）
-
-## 8. 開発・運用計画
-
-本仕様書に基づいて、以下の開発計画で進行します。各章で定義された要件を満たすよう、段階的に実装を進めていきます。
-
-## 9. データ型定義
-
-### 9.1 基本データ型
+### 7.1 基本データ型
 
 **UserData インターフェース**:
 
@@ -487,7 +416,7 @@ interface MonthlyData {
 }
 ```
 
-### 9.2 ツールチップ表示データ
+### 7.2 ツールチップ表示データ
 
 **OverviewTooltipData**:
 
