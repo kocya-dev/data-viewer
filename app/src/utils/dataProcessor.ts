@@ -365,8 +365,6 @@ export class MultiMonthAggregator {
     return result.sort((a, b) => a.month.localeCompare(b.month));
   }
 
-
-
   /**
    * 複数のカテゴリのデータを統合
    * @param categoriesData カテゴリ別データマップ

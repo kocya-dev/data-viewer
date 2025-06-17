@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { UserData, Category, Period, ViewMode, DisplayUnit, CategoryConfig } from '../types';
+import type { UserData, Category, ViewMode, DisplayUnit, CategoryConfig } from '../types';
 import { csvService } from '../services/csvService';
 import { DataValidator, DataAggregator } from '../utils/dataProcessor';
 import { configService } from '../services/configService';
@@ -7,19 +7,19 @@ import type { MonthlyData } from '../components/features/DetailChart';
 
 /**
  * CSVデータ読み込み用カスタムフック
- * 指定されたカテゴリ・期間・日付のCSVデータを読み込み、状態管理する
+ * 指定されたカテゴリ・日付のCSVデータを読み込み、状態管理する
  */
 export const useCsvData = () => {
   const [data, setData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadData = useCallback(async (category: Category, period: Period, date: string) => {
+  const loadData = useCallback(async (category: Category, date: string) => {
     setLoading(true);
     setError(null);
 
     try {
-      const rawData = await csvService.loadCsvData(category, period, date);
+      const rawData = await csvService.loadCsvData(category, date);
       const validData = DataValidator.filterValidData(rawData);
 
       setData(validData);
@@ -57,7 +57,6 @@ export const useCsvData = () => {
 export const useAppState = () => {
   const [category, setCategory] = useState<Category>('actions');
   const [viewMode, setViewMode] = useState<ViewMode>('overview');
-  const [period, setPeriod] = useState<Period>('monthly');
   const [displayUnit, setDisplayUnit] = useState<DisplayUnit>('user');
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [selectedUser, setSelectedUser] = useState<string>('');
@@ -86,7 +85,6 @@ export const useAppState = () => {
     // 状態
     category,
     viewMode,
-    period,
     displayUnit,
     selectedDate,
     selectedUser,
@@ -95,7 +93,6 @@ export const useAppState = () => {
     // 状態更新関数
     setCategory: handleCategoryChange,
     setViewMode: handleViewModeChange,
-    setPeriod,
     setDisplayUnit,
     setSelectedDate,
     setSelectedUser,
@@ -168,34 +165,22 @@ export const useYearlySelectionOptions = (yearlyData: Map<string, UserData[]>) =
 
 /**
  * 日付フォーマット用ユーティリティフック
- * 期間に応じて適切な日付文字列を生成
+ * 月単位での日付文字列を生成
  */
 export const useDateFormatter = () => {
-  const formatDateForFile = useCallback((date: Date | null, period: Period): string => {
+  const formatDateForFile = useCallback((date: Date | null): string => {
     if (!date) {
       return '';
     }
 
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
-    const day = date.getDate();
 
-    switch (period) {
-      case 'weekly':
-        // 週単位の場合は指定日付をそのまま使用（YYYYMMDD形式）
-        return `${year}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`;
-
-      case 'monthly':
-      case 'quarterly':
-        // 月単位・四半期単位の場合は月初日を使用（YYYYMM01形式）
-        return `${year}${month.toString().padStart(2, '0')}01`;
-
-      default:
-        return '';
-    }
+    // 月単位の場合は月初日を使用（YYYYMM01形式）
+    return `${year}${month.toString().padStart(2, '0')}01`;
   }, []);
 
-  const formatDateForDisplay = useCallback((date: Date | null, period: Period): string => {
+  const formatDateForDisplay = useCallback((date: Date | null): string => {
     if (!date) {
       return '';
     }
@@ -203,21 +188,7 @@ export const useDateFormatter = () => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
 
-    switch (period) {
-      case 'weekly':
-        return date.toLocaleDateString('ja-JP');
-
-      case 'monthly':
-        return `${year}年${month}月`;
-
-      case 'quarterly': {
-        const quarter = Math.ceil(month / 3);
-        return `${year}年Q${quarter}`;
-      }
-
-      default:
-        return '';
-    }
+    return `${year}年${month}月`;
   }, []);
 
   return {
@@ -265,9 +236,9 @@ export const useIntegratedDataManagement = () => {
   /**
    * 利用可能なファイルをチェック
    */
-  const checkAvailableFiles = useCallback(async (category: Category, period: Period) => {
+  const checkAvailableFiles = useCallback(async (category: Category) => {
     try {
-      const files = await csvService.checkAvailableFiles(category, period);
+      const files = await csvService.checkAvailableFiles(category);
       return files;
     } catch (err) {
       console.warn('ファイルチェックに失敗:', err);

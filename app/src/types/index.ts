@@ -17,7 +17,7 @@ export interface AggregatedData {
 
 export type Category = 'actions' | 'codespaces' | 'storage';
 
-export type Period = 'weekly' | 'monthly' | 'quarterly';
+export type Period = 'monthly';
 
 export type ViewMode = 'overview' | 'user-detail' | 'repository-detail';
 

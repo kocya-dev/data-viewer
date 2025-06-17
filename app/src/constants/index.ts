@@ -39,11 +39,7 @@ export const VIEW_MODES = [
   { value: 'repository-detail', label: 'リポジトリ詳細' },
 ] as const;
 
-export const PERIODS = [
-  { value: 'weekly', label: '週単位' },
-  { value: 'monthly', label: '月単位' },
-  { value: 'quarterly', label: '四半期単位' },
-] as const;
+export const PERIODS = [{ value: 'monthly', label: '月単位' }] as const;
 
 export const DISPLAY_UNITS = [
   { value: 'user', label: 'ユーザー単位' },

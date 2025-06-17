@@ -23,14 +23,12 @@ function Dashboard() {
   const {
     category,
     viewMode,
-    period,
     displayUnit,
     selectedDate,
     selectedUser,
     selectedRepository,
     setCategory,
     setViewMode,
-    setPeriod,
     setDisplayUnit,
     setSelectedDate,
     setSelectedUser,
@@ -60,14 +58,14 @@ function Dashboard() {
   // 全体概要モード用のデータ読み込み
   useEffect(() => {
     if (viewMode === 'overview' && selectedDate) {
-      const dateString = formatDateForFile(selectedDate, period);
+      const dateString = formatDateForFile(selectedDate);
       if (dateString) {
-        loadData(category, period, dateString);
+        loadData(category, dateString);
       }
     } else if (viewMode === 'overview') {
       clearData();
     }
-  }, [viewMode, category, period, selectedDate, loadData, clearData, formatDateForFile]);
+  }, [viewMode, category, selectedDate, loadData, clearData, formatDateForFile]);
 
   // 詳細モード用の年間データ読み込み
   useEffect(() => {
@@ -87,9 +85,7 @@ function Dashboard() {
 
   // 全体概要モード用のデータ集計（使用量情報付き）- メモ化
   const aggregatedData = useMemo(() => {
-    return viewMode === 'overview' && data.length > 0 && categoryConfig 
-      ? DataAggregator.aggregateByUnitWithUsage(data, displayUnit, categoryConfig) 
-      : [];
+    return viewMode === 'overview' && data.length > 0 && categoryConfig ? DataAggregator.aggregateByUnitWithUsage(data, displayUnit, categoryConfig) : [];
   }, [viewMode, data, displayUnit, categoryConfig]);
 
   // 全体概要モード用のサマリー - メモ化
@@ -98,9 +94,7 @@ function Dashboard() {
   }, [viewMode, data]);
 
   const freeQuotaUsage = useMemo(() => {
-    return viewMode === 'overview' && categoryConfig 
-      ? DataAggregator.calculateFreeQuotaUsage(data, categoryConfig) 
-      : null;
+    return viewMode === 'overview' && categoryConfig ? DataAggregator.calculateFreeQuotaUsage(data, categoryConfig) : null;
   }, [viewMode, data, categoryConfig]);
 
   // 詳細モード用のデータ存在チェック

@@ -19,12 +19,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ja } from 'date-fns/locale/ja';
-import type { ViewMode, Period, DisplayUnit } from '../../types';
-import { PERIODS, DISPLAY_UNITS } from '../../constants';
+import type { ViewMode, DisplayUnit } from '../../types';
+import { DISPLAY_UNITS } from '../../constants';
 
 interface DataFiltersProps {
   viewMode: ViewMode;
-  period: Period;
   displayUnit: DisplayUnit;
   selectedDate: Date | null;
   selectedYear?: number;
@@ -32,7 +31,6 @@ interface DataFiltersProps {
   selectedRepository: string;
   users: string[];
   repositories: string[];
-  onPeriodChange: (period: Period) => void;
   onDisplayUnitChange: (unit: DisplayUnit) => void;
   onDateChange: (date: Date | null) => void;
   onYearChange?: (year: number) => void;
@@ -42,7 +40,6 @@ interface DataFiltersProps {
 
 export function DataFilters({
   viewMode,
-  period,
   displayUnit,
   selectedDate,
   selectedYear,
@@ -50,7 +47,6 @@ export function DataFilters({
   selectedRepository,
   users,
   repositories,
-  onPeriodChange,
   onDisplayUnitChange,
   onDateChange,
   onYearChange,
@@ -70,10 +66,10 @@ export function DataFilters({
             <Box sx={{ minWidth: 200 }}>
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ja}>
                 <DatePicker
-                  label={period === 'weekly' ? '週の開始日' : period === 'monthly' ? '月を選択' : '四半期を選択'}
+                  label="月を選択"
                   value={selectedDate}
                   onChange={onDateChange}
-                  views={period === 'weekly' ? ['year', 'month', 'day'] : ['year', 'month']}
+                  views={['year', 'month']}
                   slotProps={{
                     textField: {
                       fullWidth: true,
@@ -99,22 +95,6 @@ export function DataFilters({
                       </MenuItem>
                     );
                   })}
-                </Select>
-              </FormControl>
-            </Box>
-          )}
-
-          {/* 期間選択（全体概要モードのみ） */}
-          {viewMode === 'overview' && (
-            <Box sx={{ minWidth: 150 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel>期間</InputLabel>
-                <Select value={period} label="期間" onChange={e => onPeriodChange(e.target.value as Period)}>
-                  {PERIODS.map(periodOption => (
-                    <MenuItem key={periodOption.value} value={periodOption.value}>
-                      {periodOption.label}
-                    </MenuItem>
-                  ))}
                 </Select>
               </FormControl>
             </Box>

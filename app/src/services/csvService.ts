@@ -1,4 +1,4 @@
-import type { UserData, Category, Period } from '../types';
+import type { UserData, Category } from '../types';
 
 /**
  * CSV読み込みサービス
@@ -14,13 +14,12 @@ export class CsvService {
   /**
    * CSVファイルを読み込み、パースしてUserDataの配列を返す
    * @param category カテゴリ（actions, codespaces, storage）
-   * @param period 期間（weekly, monthly, quarterly）
    * @param date 日付（YYYYMMDD形式）
    * @returns UserDataの配列
    */
-  async loadCsvData(category: Category, period: Period, date: string): Promise<UserData[]> {
+  async loadCsvData(category: Category, date: string): Promise<UserData[]> {
     const fileName = `${date}-${category}.csv`;
-    const filePath = `${this.baseUrl}/${period}/${fileName}`;
+    const filePath = `${this.baseUrl}/monthly/${fileName}`;
 
     try {
       const response = await fetch(filePath);
@@ -100,15 +99,14 @@ export class CsvService {
   /**
    * 複数月のCSVファイルを一括読み込み
    * @param category カテゴリ
-   * @param period 期間
    * @param dates 日付の配列（YYYYMMDD形式）
    * @returns 日付をキーとしたUserDataマップ
    */
-  async loadMultipleCsvData(category: Category, period: Period, dates: string[]): Promise<Map<string, UserData[]>> {
+  async loadMultipleCsvData(category: Category, dates: string[]): Promise<Map<string, UserData[]>> {
     const result = new Map<string, UserData[]>();
     const loadPromises = dates.map(async date => {
       try {
-        const data = await this.loadCsvData(category, period, date);
+        const data = await this.loadCsvData(category, date);
         return { date, data };
       } catch (error) {
         console.warn(`Failed to load data for ${date}:`, error);
@@ -140,7 +138,7 @@ export class CsvService {
       dates.push(`${year}${monthStr}01`);
     }
 
-    const rawData = await this.loadMultipleCsvData(category, 'monthly', dates);
+    const rawData = await this.loadMultipleCsvData(category, dates);
     const result = new Map<string, UserData[]>();
 
     // 日付キー（YYYYMMDD）を月キー（YYYY-MM）に変換
@@ -157,16 +155,15 @@ export class CsvService {
   /**
    * 利用可能なデータファイルを実際にチェック
    * @param category カテゴリ
-   * @param period 期間
    * @returns 存在するファイルの日付配列
    */
-  async checkAvailableFiles(category: Category, period: Period): Promise<string[]> {
+  async checkAvailableFiles(category: Category): Promise<string[]> {
     const possibleFiles = this.generateAvailableFiles();
     const availableFiles: string[] = [];
 
     for (const fileName of possibleFiles) {
       if (fileName.endsWith(`-${category}.csv`)) {
-        const filePath = `${this.baseUrl}/${period}/${fileName}`;
+        const filePath = `${this.baseUrl}/monthly/${fileName}`;
         try {
           const response = await fetch(filePath, { method: 'HEAD' });
           if (response.ok) {

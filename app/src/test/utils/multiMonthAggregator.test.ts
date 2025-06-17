@@ -71,8 +71,6 @@ describe('MultiMonthAggregator', () => {
     });
   });
 
-
-
   describe('generateCategorySummary', () => {
     it('should generate summary for multiple categories', () => {
       const categoriesData = new Map([
