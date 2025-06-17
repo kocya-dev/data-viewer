@@ -1,5 +1,13 @@
 import type { CategoryConfig } from '../types';
 
+/**
+ * アプリケーション定数
+ *
+ * 仕様変更 (2025-06-17): 期間選択機能削除に伴い、期間関連定数を簡素化
+ * - Period: 'monthly' のみ使用
+ * - 週次・四半期データ処理機能は削除済み
+ */
+
 export const CATEGORIES: CategoryConfig[] = [
   {
     name: 'actions',

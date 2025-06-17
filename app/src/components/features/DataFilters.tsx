@@ -22,6 +22,14 @@ import { ja } from 'date-fns/locale/ja';
 import type { ViewMode, DisplayUnit } from '../../types';
 import { DISPLAY_UNITS } from '../../constants';
 
+/**
+ * データフィルタリングコンポーネント
+ *
+ * 仕様変更 (2025-06-17): 期間選択機能を削除し、月単位固定に変更
+ * - 全体概要モード: YYYY-MM形式のDatePickerによる月指定のみ
+ * - 詳細モード: 年選択 + ユーザー/リポジトリ選択
+ */
+
 interface DataFiltersProps {
   viewMode: ViewMode;
   displayUnit: DisplayUnit;

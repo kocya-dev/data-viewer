@@ -3,6 +3,10 @@ import type { UserData, AggregatedData, DisplayUnit, CategoryConfig } from '../t
 /**
  * データ集計ユーティリティ
  * UserDataの配列を様々な方法で集計・加工する機能を提供
+ *
+ * 仕様変更 (2025-06-17): 四半期集計機能を削除、月単位処理のみに簡素化
+ * - MultiMonthAggregator.aggregateToQuarterly メソッド削除済み
+ * - 月次データのみを対象とした集計処理に変更
  */
 export class DataAggregator {
   /**

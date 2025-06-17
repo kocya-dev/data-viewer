@@ -21,9 +21,7 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 │   ├── package.json
 │   └── vite.config.ts
 ├── data/             # CSVデータ格納ディレクトリ
-│   ├── weekly/       # 週単位データ
-│   ├── monthly/      # 月単位データ
-│   └── quarterly/    # 四半期単位データ
+│   └── monthly/      # 月単位データ（期間固定化により、週次・四半期データは廃止）
 ├── docs/             # 仕様書・ドキュメント
 ├── .github/
 │   ├── instructions/ # コーディング規約
@@ -163,7 +161,7 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 
 1. **マルチカテゴリ対応**: Actions/Codespaces/Storage の統合可視化
 2. **多角的分析**: 全体概要・ユーザー詳細・リポジトリ詳細の 3 表示モード
-3. **高度なデータ処理**: 複数期間データ集計・無料枠使用率計算・傾向分析
+3. **高度なデータ処理**: 月次データ集計・無料枠使用率計算・傾向分析
 4. **高品質 UI/UX**: Material-UI ベース、レスポンシブ、アクセシビリティ対応、中央配置・1024px 固定幅レイアウト
 5. **パフォーマンス最適化**: Code Splitting、メモ化、バンドルサイズ最適化
 6. **堅牢性**: 包括的エラーハンドリング、型安全性、テストカバレッジ
@@ -186,6 +184,39 @@ GitHub Organization 配下の GitHub Actions、Codespaces、Storage の課金額
 - ✅ コード品質チェック完了
 - ✅ レイアウト仕様実装完了
 - ✅ デプロイ用 dist/ 生成確認
+
+### Phase 7: 期間選択機能削除・月単位固定化 ✅ 完了 (2025-06-17)
+
+**📋 仕様変更概要**
+
+全体概要モードにおける期間選択機能（週次/四半期）を削除し、月単位表示に固定化。
+
+**🔧 実装内容:**
+
+1. **Phase 1: 仕様書更新** - webapp-spec.md の修正完了
+2. **Phase 2: フロントエンド実装** - 四半期集計機能削除、テストコード修正
+3. **Phase 3: 品質確認・テスト** - 64/64 テスト成功、動作確認完了
+4. **Phase 4: ドキュメント最終更新** - README.md 更新、コメント整理
+
+**📊 削除対象機能:**
+
+- 期間選択セレクトボックス（週単位/四半期単位）
+- 週次・四半期データ読み込み機能
+- 四半期集計処理（`MultiMonthAggregator.aggregateToQuarterly`）
+- 期間別日付指定 UI（YYYY-MM-DD 形式）
+
+**🎯 固定化仕様:**
+
+- **期間**: 月単位のみ
+- **日付指定**: YYYY-MM 形式の DatePicker による月指定
+- **データソース**: `./data/monthly/`ディレクトリのみ使用
+
+**✅ 品質確認結果:**
+
+- 機能テスト: 全体概要・詳細モード正常動作確認
+- リグレッションテスト: 既存機能への影響なし
+- UI/UX テスト: レイアウト調整、アクセシビリティ維持
+- 品質チェック: ESLint・TypeScript・ビルド全て成功
 
 ## クイックスタート
 
@@ -227,8 +258,10 @@ npm run build
 
 ### データソース
 
-- CSV 形式のファイル（週次/月次/四半期）
+- CSV 形式のファイル（月次固定）
 - ファイル命名規則: `YYYYMMDD-{category}.csv`
+- データ格納場所: `./data/monthly/` ディレクトリ
+- **仕様変更**: 期間選択機能を削除し、月単位表示に固定化（2025-06-17）
 
 ## 開発ガイドライン
 
@@ -350,7 +383,7 @@ npm run format
 
 **UI コンポーネント強化:**
 
-- `app/src/components/features/DataFilters.tsx` - データフィルタリング UI（期間・日付・ユーザー・リポジトリ選択）
+- `app/src/components/features/DataFilters.tsx` - データフィルタリング UI（日付・ユーザー・リポジトリ選択）
 - `app/src/components/features/DataSummary.tsx` - データサマリー表示（総コスト、無料枠使用率、警告）
 - `app/src/pages/Dashboard.tsx` - メインダッシュボード（データ読み込み・表示制御）
 
@@ -556,3 +589,4 @@ npm run dev
 - 2025-06-15: Phase 4 完了 - 最適化・テスト・品質管理（パフォーマンス最適化、エラーハンドリング強化、コード品質改善、PR #5 作成）
 - 2025-06-15: Phase 5 完了 - 仕様追加実装（レイアウト中央配置・1024px 固定幅実装、PR #6 作成）
 - 2025-06-15: **プロジェクト完了** - GitHub Organization 課金可視化アプリ開発完了
+- 2025-06-17: Phase 7 完了 - 期間選択機能削除・月単位固定化（仕様変更・品質確認・ドキュメント更新完了）

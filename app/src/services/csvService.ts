@@ -3,6 +3,9 @@ import type { UserData, Category } from '../types';
 /**
  * CSV読み込みサービス
  * ブラウザ環境でCSVファイルを読み込み、パースする機能を提供
+ *
+ * 仕様変更 (2025-06-17): 期間選択機能を削除し、月単位固定に変更
+ * 対応データソース: ./data/monthly/ ディレクトリのみ
  */
 export class CsvService {
   private baseUrl: string;
