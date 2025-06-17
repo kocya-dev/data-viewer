@@ -123,7 +123,6 @@ function Dashboard() {
       <Stack spacing={3}>
         <DataFilters
           viewMode={viewMode}
-          period={period}
           displayUnit={displayUnit}
           selectedDate={selectedDate}
           selectedUser={selectedUser}
@@ -131,7 +130,6 @@ function Dashboard() {
           selectedYear={selectedYear}
           users={users}
           repositories={repositories}
-          onPeriodChange={setPeriod}
           onDisplayUnitChange={setDisplayUnit}
           onDateChange={setSelectedDate}
           onYearChange={setSelectedYear}
