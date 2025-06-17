@@ -71,30 +71,7 @@ describe('MultiMonthAggregator', () => {
     });
   });
 
-  describe('aggregateToQuarterly', () => {
-    it('should aggregate monthly data to quarterly', () => {
-      const yearlyData = [
-        { month: '2024-01', cost: 10.0, usage: 100 },
-        { month: '2024-02', cost: 15.0, usage: 150 },
-        { month: '2024-03', cost: 20.0, usage: 200 },
-        { month: '2024-04', cost: 25.0, usage: 250 },
-      ];
 
-      const quarterly = MultiMonthAggregator.aggregateToQuarterly(yearlyData);
-
-      expect(quarterly).toHaveLength(2);
-      expect(quarterly[0]).toEqual({
-        quarter: '2024-Q1',
-        cost: 45.0,
-        usage: 450,
-      });
-      expect(quarterly[1]).toEqual({
-        quarter: '2024-Q2',
-        cost: 25.0,
-        usage: 250,
-      });
-    });
-  });
 
   describe('generateCategorySummary', () => {
     it('should generate summary for multiple categories', () => {

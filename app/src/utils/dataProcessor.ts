@@ -365,40 +365,7 @@ export class MultiMonthAggregator {
     return result.sort((a, b) => a.month.localeCompare(b.month));
   }
 
-  /**
-   * 年間データから四半期別集計を生成
-   * @param yearlyData 年間データ
-   * @returns 四半期別集計データ
-   */
-  static aggregateToQuarterly(yearlyData: Array<{ month: string; cost: number; usage?: number }>): Array<{ quarter: string; cost: number; usage?: number }> {
-    const quarterlyMap = new Map<string, { cost: number; usage: number }>();
 
-    for (const monthData of yearlyData) {
-      // YYYY-MM 形式から年と月を抽出
-      const [year, month] = monthData.month.split('-');
-      const monthNum = parseInt(month, 10);
-      const quarterNum = Math.ceil(monthNum / 3);
-      const quarterKey = `${year}-Q${quarterNum}`;
-
-      const currentQuarter = quarterlyMap.get(quarterKey) || {
-        cost: 0,
-        usage: 0,
-      };
-      currentQuarter.cost += monthData.cost;
-      if (monthData.usage !== undefined) {
-        currentQuarter.usage += monthData.usage;
-      }
-      quarterlyMap.set(quarterKey, currentQuarter);
-    }
-
-    return Array.from(quarterlyMap.entries())
-      .map(([quarter, data]) => ({
-        quarter,
-        cost: data.cost,
-        usage: data.usage > 0 ? data.usage : undefined,
-      }))
-      .sort((a, b) => a.quarter.localeCompare(b.quarter));
-  }
 
   /**
    * 複数のカテゴリのデータを統合

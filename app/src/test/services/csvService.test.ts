@@ -120,7 +120,7 @@ jane_smith,web-app,5,0.30`;
       };
 
       try {
-        const result = await csvService.loadMultipleCsvData('actions', 'monthly', dates);
+        const result = await csvService.loadMultipleCsvData('actions', dates);
 
         expect(result.size).toBe(2);
         expect(result.get('20240101')).toHaveLength(1);
